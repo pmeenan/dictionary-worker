@@ -86,10 +86,10 @@ async function compressResponse(original, ctx) {
   // Add the appropriate headers
   const response = new Response(readable, original);
   let ver = zstd.versionNumber();
-  response.headers.append("Link", '<' + dictionaryPathname + '>; rel="compression-dictionary"',);
   response.headers.set("X-Zstd-Version", ver);
   response.headers.set("Vary", 'Accept-Encoding, Available-Dictionary',);
   response.headers.set("Content-Encoding", 'dcz',);
+  response.encodeBody = "manual";
   return response;
 }
 
