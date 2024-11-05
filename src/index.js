@@ -1,5 +1,11 @@
-import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
-import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
+// Pick ONE - either brotli or zstd
+
+// Zstd
+//import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
+//import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
+// Brotli
+import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
+import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
 
 // File name of the current dictionary asset (TODO: see if there is a way to get this dynamically)
 const currentDictionary = "HWl0A6pNEHO4AeCdArQj53JlvZKN8Fcwk3JcGv3tak8";
@@ -18,8 +24,9 @@ const compressionWindowLog = 20;  // Compression window should be at least as lo
 
 // Internal globals for managing state while waiting for the dictionary and zstd wasm to load
 let zstd = null;
+let brotli = null;
 let dictionaryLoaded = null;
-let zstdLoaded = null;
+let wasmLoaded = null;
 let initialized = false;
 let dictionary = null;
 let dictionarySize = 0;
@@ -27,8 +34,7 @@ let dictionaryJS = null;
 const currentHash = atob(currentDictionary.replaceAll('-', '+').replaceAll('_', '/'));
 const dictionaryPathname = dictionaryPath + currentDictionary + '.dat';
 const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...Uint8Array.from(currentHash, c => c.charCodeAt(0))]);
-
-// Initialize wasm outside of a request context
+const dcbHeader = new Uint8Array([0xff, 0x44, 0x43, 0x42, ...Uint8Array.from(currentHash, c => c.charCodeAt(0))]);
 
 export default {
 
@@ -43,8 +49,10 @@ export default {
   */
   async fetch(request, env, ctx) {
     // Trigger the async dictionary load (has to be done in a request context to have access to env)
-    dictionaryInit(request, env, ctx).catch(E => console.log(E));;
-    zstdInit().catch(E => console.log(E));;
+    dictionaryInit(request, env, ctx).catch(E => console.log(E));
+    zstdInit(ctx).catch(E => console.log(E));
+    brotliInit(ctx).catch(E => console.log(E));
+
 
     // Handle the request for the dictionary itself
     const url = new URL(request.url);
@@ -56,13 +64,13 @@ export default {
 
       const dest = request.headers.get("sec-fetch-dest");
       if (original.ok && dest && (dest.indexOf("document") !== -1 || dest.indexOf("frame") !== -1)) {
-        // block on the dictionary/zstd init if necessary
+        // block on the dictionary/wasm init if necessary
         if (blocking) {
-          if (zstd === null) { await zstdLoaded; }
+          if (zstd === null && brotli === null) { await wasmLoaded; }
           if (dictionary === null) { await dictionaryLoaded; }
         }
 
-        if (supportsCompression(request) && zstd !== null && dictionary !== null) {
+        if (supportsCompression(request)) {
           return await compressResponse(original, ctx);
         } else {
           const response = new Response(original.body, original);
@@ -81,19 +89,27 @@ export default {
 */
 async function compressResponse(original, ctx) {
   const { readable, writable } = new TransformStream();
-  ctx.waitUntil(compressStream(original.body, writable));
+  if (zstd !== null) {
+    ctx.waitUntil(compressStreamZstd(original.body, writable));
+  } else if (brotli !== null) {
+    ctx.waitUntil(compressStreamBrotli(original.body, writable));
+  }
 
   // Add the appropriate headers
   const response = new Response(readable, original);
-  let ver = zstd.versionNumber();
-  response.headers.set("X-Zstd-Version", ver);
+  if (zstd !== null) {
+    let ver = zstd.versionNumber();
+    response.headers.set("X-Zstd-Version", ver);
+    response.headers.set("Content-Encoding", 'dcz',);
+    response.encodeBody = "manual";
+  } else if (brotli !== null) {
+
+  }
   response.headers.set("Vary", 'Accept-Encoding, Available-Dictionary',);
-  response.headers.set("Content-Encoding", 'dcz',);
-  response.encodeBody = "manual";
   return response;
 }
 
-async function compressStream(readable, writable) {
+async function compressStreamZstd(readable, writable) {
   const reader = readable.getReader();
   const writer = writable.getWriter();
 
@@ -196,6 +212,17 @@ async function compressStream(readable, writable) {
   if (cctx !== null) zstd.freeCCtx(cctx);
 }
 
+async function compressStreamBrotli(readable, writable) {
+  const reader = readable.getReader();
+  const writer = writable.getWriter();
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    await writer.write(value);
+  }
+  await writer.close();
+}
+
 /*
  Handle the client request for a dictionary
 */
@@ -218,14 +245,15 @@ async function fetchDictionary(env, url) {
 function supportsCompression(request) {
   let hasDictionary = false;
   const availableDictionary = request.headers.get("available-dictionary");
-  if (availableDictionary) {
+  if (availableDictionary && dictionary !== null) {
     const availableHash = atob(availableDictionary.trim().replaceAll(':', ''));
     if (availableHash == currentHash) {
       hasDictionary = true;
     }
   }
-  const supportsDCZ = request.cf.clientAcceptEncoding.indexOf("dcz") !== -1;
-  return hasDictionary && supportsDCZ;
+  const supportsDCZ = request.cf.clientAcceptEncoding.indexOf("dcz") !== -1 && zstd !== null;
+  const supportsDCB = request.cf.clientAcceptEncoding.indexOf("dcb") !== -1 && brotli !== null;
+  return hasDictionary && (supportsDCZ || supportsDCB);
 }
 
 /*
@@ -253,20 +281,14 @@ async function dictionaryInit(request, env, ctx) {
 }
 
 // wasm setup
-async function zstdInit() {
-  // we send our own instantiateWasm function
-  // to the zstdlib module
-  // so we can initialize the WASM instance ourselves
-  // since Workers puts your wasm file in global scope
-  // as a binding. In this case, this binding is called
-  // `wasm` as that is the name Wrangler uses
-  // for any uploaded wasm module
-  if (zstd === null && zstdLoaded === null) {
+async function zstdInit(ctx) {
+  if (zstd === null && wasmLoaded === null && (typeof zstdlib !== 'undefined')) {
     let resolve;
-    zstdLoaded = new Promise((res, rej) => {
+    wasmLoaded = new Promise((res, rej) => {
       resolve = res;
     });
-    // Keep the request alive until zstd finished initializing
+    // Keep the request alive until wasm loads
+    ctx.waitUntil(wasmLoaded);
     zstd = await zstdlib({
       instantiateWasm(info, receive) {
         let instance = new WebAssembly.Instance(zstdwasm, info);
@@ -274,9 +296,29 @@ async function zstdInit() {
         return instance.exports;
       },
       locateFile(path, scriptDirectory) {
-        // scriptDirectory is undefined, so this is a
-        // no-op to avoid exception "TypeError: Invalid URL string."
-        console.log("locateFile");
+        return path
+      },
+    }).catch(E => console.log(E));
+    postInit();
+    resolve(true);
+  }
+}
+
+async function brotliInit(ctx) {
+  if (brotli === null && wasmLoaded === null && (typeof brotlienc !== 'undefined')) {
+    let resolve;
+    wasmLoaded = new Promise((res, rej) => {
+      resolve = res;
+    });
+    // Keep the request alive until wasm loads
+    ctx.waitUntil(wasmLoaded);
+    brotli = await brotlienc({
+      instantiateWasm(info, receive) {
+        let instance = new WebAssembly.Instance(BrotliEncoder, info);
+        receive(instance);
+        return instance.exports;
+      },
+      locateFile(path, scriptDirectory) {
         return path
       },
     }).catch(E => console.log(E));
