@@ -1,3 +1,6 @@
 [submodule "zstd-wasm-compress"]
 	path = zstd-wasm-compress
 	url = https://github.com/pmeenan/zstd-wasm-compress.git
+[submodule "brotli-wasm-compress"]
+	path = brotli-wasm-compress
+	url = https://github.com/pmeenan/brotli-wasm-compress.git
