@@ -1,11 +1,11 @@
 // Pick ONE - either brotli or zstd
 
 // Zstd - ~100k compressed
-//import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
-//import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
+import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
+import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
 // Brotli - ~900k compressed
-import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
-import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
+//import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
+//import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
 
 // File name of the current dictionary asset (TODO: see if there is a way to get this dynamically)
 const currentDictionary = "HWl0A6pNEHO4AeCdArQj53JlvZKN8Fcwk3JcGv3tak8";
