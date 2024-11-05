@@ -1,9 +1,9 @@
 // Pick ONE - either brotli or zstd
 
-// Zstd
+// Zstd - ~100k compressed
 //import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
 //import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
-// Brotli
+// Brotli - ~900k compressed
 import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
 import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
 
@@ -48,37 +48,42 @@ export default {
     - Otherwise, pass the fetch through to the origin.
   */
   async fetch(request, env, ctx) {
-    // Trigger the async dictionary load (has to be done in a request context to have access to env)
-    dictionaryInit(request, env, ctx).catch(E => console.log(E));
-    zstdInit(ctx).catch(E => console.log(E));
-    brotliInit(ctx).catch(E => console.log(E));
-
-
     // Handle the request for the dictionary itself
     const url = new URL(request.url);
     const isDictionary = url.pathname == dictionaryPathname;
     if (isDictionary) {
       return await fetchDictionary(env, url);
     } else {
-      const original = await fetch(request);
-
       const dest = request.headers.get("sec-fetch-dest");
-      if (original.ok && dest && (dest.indexOf("document") !== -1 || dest.indexOf("frame") !== -1)) {
-        // block on the dictionary/wasm init if necessary
-        if (blocking) {
-          if (zstd === null && brotli === null) { await wasmLoaded; }
-          if (dictionary === null) { await dictionaryLoaded; }
-        }
+      if (dest && (dest.indexOf("document") !== -1 || dest.indexOf("frame") !== -1)) {
+        if (request.headers.get("available-dictionary")) {
+          // Trigger the async dictionary load
+          dictionaryInit(request, env, ctx).catch(E => console.log(E));
+          zstdInit(ctx).catch(E => console.log(E));
+          brotliInit(ctx).catch(E => console.log(E));
 
-        if (supportsCompression(request)) {
-          return await compressResponse(original, ctx);
+          // Fetch the actual content
+          const original = await fetch(request);
+
+          // block on the dictionary/wasm init if necessary
+          if (blocking) {
+            if (zstd === null && brotli === null) { await wasmLoaded; }
+            if (dictionary === null) { await dictionaryLoaded; }
+          }
+          
+          if (original.ok && supportsCompression(request)) {
+            return await compressResponse(original, ctx);
+          } else {
+            return original;
+          }
         } else {
+          // Just add the link header
           const response = new Response(original.body, original);
           response.headers.append("Link", '<' + dictionaryPathname + '>; rel="compression-dictionary"',);
           return response;
         }
       } else {
-        return original;
+        return await fetch(request);
       }
     }
   }
@@ -103,7 +108,10 @@ async function compressResponse(original, ctx) {
     response.headers.set("Content-Encoding", 'dcz',);
     response.encodeBody = "manual";
   } else if (brotli !== null) {
-
+    let ver = brotli.Version();
+    response.headers.set("X-Brotli-Version", ver);
+    response.headers.set("Content-Encoding", 'dcb',);
+    response.encodeBody = "manual";
   }
   response.headers.set("Vary", 'Accept-Encoding, Available-Dictionary',);
   return response;
@@ -184,10 +192,10 @@ async function compressStreamZstd(readable, writable) {
             chunksGathered = 0;
           }
 
+          const remaining = zstd.compressStream2(cctx, outBuffer, inBuffer, mode);
+
           // Keep track of the number of chunks processed where we didn't send any response.
           if (outBuffer.pos == 0) chunksGathered++;
-
-          const remaining = zstd.compressStream2(cctx, outBuffer, inBuffer, mode);
 
           if (outBuffer.pos > 0) {
             const data = new Uint8Array(zstd.HEAPU8.buffer, outBuffer.dst, outBuffer.pos);
@@ -212,15 +220,91 @@ async function compressStreamZstd(readable, writable) {
   if (cctx !== null) zstd.freeCCtx(cctx);
 }
 
+// The current brotli sample below doesn't handle streaming incremental chunks
+// (it will flush whenever the encoder decides to)
 async function compressStreamBrotli(readable, writable) {
   const reader = readable.getReader();
   const writer = writable.getWriter();
+
+  // allocate a compression context and buffers before the stream starts
+  let state = null;
+  let inBuff = null;
+  let outBuff = null;
+  let inSize = 102400;
+  let outSize = 204800;
+  try {
+    state = brotli.CreateInstance();
+    if (state !== null) {
+      inBuff = brotli._malloc(inSize);
+      outBuff = brotli._malloc(outSize);
+
+      // configure the brotli parameters
+      brotli.SetParameter(state, brotli.Parameter.QUALITY, compressionLevel);
+      brotli.SetParameter(state, brotli.Parameter.LGWIN, compressionWindowLog);
+      
+      brotli.AttachPreparedDictionary(state, dictionary);
+    }
+  } catch (E) {
+    console.log(E);
+  }
+  
+  // write the dcb header
+  await writer.write(dcbHeader);
+  
   while (true) {
     const { value, done } = await reader.read();
+    const size = done ? 0 : value.byteLength;
+
+    // Grab chunks of the input stream in case it is bigger than the zstd buffer
+    let pos = 0;
+    while (pos < size || done) {
+      const endPos = Math.min(pos + inSize, size);
+      const chunkSize = done ? 0 : endPos - pos;
+      const chunk = done ? null : value.subarray(pos, endPos);
+      pos = endPos;
+
+      try {
+        if (chunkSize > 0) {
+          brotli.HEAPU8.set(chunk, inBuff);
+        }
+
+        let finished = false;
+        do {
+          const inBuffer = new brotli.Buffer();
+          inBuffer.ptr = inBuff;
+          inBuffer.size = chunkSize;
+          const outBuffer = new brotli.Buffer();
+          outBuffer.ptr = outBuff;
+          outBuffer.size = outSize;
+          finished = true;
+
+          let mode = done ? brotli.Operation.FINISH : brotli.Operation.PROCESS;
+          if (brotli.CompressStream(state, mode, inBuffer, outBuffer)) {
+            const available = outSize - outBuffer.size;
+            if (available > 0) {
+              const data = new Uint8Array(brotli.HEAPU8.buffer, outBuff, available);
+              await writer.write(data);
+            }
+            if (done && brotli.HasMoreOutput(state)) {
+              finished = false;
+            }
+          } else {
+            console.log("brotli.Compress failed");
+          }
+        } while(!finished);
+      } catch (E) {
+        console.log(E);
+      }
+      if (done) break;
+    }
     if (done) break;
-    await writer.write(value);
   }
   await writer.close();
+
+  // Free the brotli context and buffers
+  if (inBuff !== null) brotli._free(inBuff);
+  if (outBuff !== null) brotli._free(outBuff);
+  if (state !== null) brotli.DestroyInstance(state);
 }
 
 /*
@@ -305,7 +389,7 @@ async function zstdInit(ctx) {
 }
 
 async function brotliInit(ctx) {
-  if (brotli === null && wasmLoaded === null && (typeof brotlienc !== 'undefined')) {
+  if (brotli === null && wasmLoaded === null && (typeof brotlienc !== 'undefined') && (typeof zstdlib === 'undefined')) {
     let resolve;
     wasmLoaded = new Promise((res, rej) => {
       resolve = res;
@@ -330,15 +414,25 @@ async function brotliInit(ctx) {
 // After both the dictionary and wasm have initialized, prepare the dictionary into zstd
 // memory so it can be reused efficiently.
 function postInit() {
-  if (!initialized) {
-    if (zstd !== null && dictionaryJS !== null) {
-      // copy the dictionary over to wasm
+  if (!initialized && dictionaryJS !== null) {
+    if (zstd !== null) {
       try {
         let d = zstd._malloc(dictionaryJS.byteLength)
         dictionarySize = dictionaryJS.byteLength;
         zstd.HEAPU8.set(dictionaryJS, d);
         dictionaryJS = null;
         dictionary = zstd.createCDict_byReference(d, dictionarySize, compressionLevel);
+        initialized = true;
+      } catch (E) {
+        console.log(E);
+      }
+    } else if (brotli !== null) {
+      try {
+        let d = brotli._malloc(dictionaryJS.byteLength)
+        dictionarySize = dictionaryJS.byteLength;
+        brotli.HEAPU8.set(dictionaryJS, d);
+        dictionaryJS = null;
+        dictionary = brotli.PrepareDictionary(brotli.SharedDictionaryType.Raw, dictionarySize, d, compressionLevel);
         initialized = true;
       } catch (E) {
         console.log(E);
