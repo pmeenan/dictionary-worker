@@ -1,0 +1,952 @@
+o-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='https://roadtrip.meenan.us/wp-includes/css/dist/block-library/style.min.css?ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{colorght-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-colrtant;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-bor !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-blocmns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='social-widget-css' href='https://roadtrip.meenan.us/wp-content/plugins/social-media-widget/social_widget.css?ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='style-css' href='https://roadtrip.meenan.us/wp-content/themes/scrappy/style.css?ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='scrappy-fonts-css' href='https://fonts.googleapis.com/css?family=Rochester%7CUnna%7CAlegreya%3A400italic%2C700italic%2C400%2C700&#038;ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='ngg_basic_slideshow_style-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/ngg_basic_slideshow.css?ver=3.37' type='text/css' media='all' />
+<link rel='stylesheet' id='ngg_slick_slideshow_stylhow/slick/slick.css?ver=3.37' type='text/css' media='all' />
+<link rel='stylesheet' id='ngg_slick_slideshow_theme-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick-theme.css?ver=3.37' type='text/css' media='all' />
+<link rel='stylesheet' id='ngg_trigger_buttons-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/trigger_buttons.css?ver=3.37' type='text/css' media='all' />
+<link rel='stylesheet' id='shutter-0-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/shutter.css?ver=3.37' type='text/css' media='all' />
+<link rel='stylesheet' id='fontawesome_v4_shim_style-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/fontawesome/css/v4-shims.min.css?ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='fontawesome-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/fontawesome/css/all.min.css?ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='nextgen_widgets_style-css' href='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/widget/static/widgets.css?ver=3.37' type='text/css' media='all' />
+<link rel='stylesheet' id='nextgen_basic_ss/jquery/jquery.min.js?ver=3.7.0' id='jquery-core-js'></script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1' id='jquery-migrate-js'></script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick-1.8.0-modded.js?ver=3.37' id='ngg_slick-js'></script>
+<script type='text/javascript' id='photocrati_ajax-js-extra'>
+/* <![CDATA[ */
+var photocrati_ajax = {"url":"https:\/\/roadtrip.meenan.us\/index.php?photocrati_ajax=1","wp_home_url":"https:\/\/roadtrip.meenan.us\/index.php","wp_site_url":"https:\/\/roadtrip.meenan.us\/index.php","wp_root_url":"https:\/\/roadtrip.meenan.us\/index.php","wp_plugins_url":"https:\/\/roadtrip.meenan.us\/wp-content\/plugins","wp_content_url":"https:\/\/roadtrip.meenan.us\/wp-content","wp_includes_url":"https:\/\/roadtrip.meenan.us\/wp-includes\/","ngg_param_slug":"nggallery"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/ajax/static/ajax.min.js?ver=3.37' id='photocrati_ajax-js'></script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/ngg_basic_slideshow.js?ver=3.37' id='photocrati-nextgen_basic_slideshow-js'></script>
+fontawesome/js/v4-shims.min.js?ver=5.3.1' id='fontawesome_v4_shim-js'></script>
+<script type='text/javascript' defer data-auto-replace-svg="false" data-keep-original-source="false" data-search-pseudo-elements src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/fontawesome/js/all.min.js?ver=5.3.1' id='fontawesome-js'></script>
+<link rel="https://api.w.org/" href="https://roadtrip.meenan.us/index.php?rest_route=/" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://roadtrip.meenan.us/xmlrpc.php?rsd" />
+
+			<style type="text/css">
+				.gllr_image_row {
+					clear: both;
+				}
+			</style>
+			<script type='text/javascript'>
+var tminusnow = '{"now":"10\/29\/2024 12:34:46"}';
+</script>		<style type="text/css">
+			.stripes { background-image: url('https://roadtrip.meenan.us/wp-content/themes/scrappy/img/stripes.gif'); }
+		</style>
+<style type="text/css" id="custom-background-css">
+body.custom-background { backgrou8-1024x768.jpg 1024w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6278-150x113.jpg 150w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6278-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /><figcaption>Orange trees at Orangeland </figcaption></figure>
+
+
+
+<p>After picking up my nieces and nephew we headed toward Nevada. I glad we left as they were expecting a record breaking heatwave. We only stayed one night and we were all wishing to jump in the pool. Sadly there were too many people so we coupled off in the trailer while watching movies. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1280" height="960" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6306.jpg" alt="" class="wp-image-1751" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6306.jpg 1280w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6306-300x225.jpg 300w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6306-1024x768.jpg 1>
+
+
+
+<p>After leaving Vegas we headed to the Grand Canyon. While at the canyon it was very hot, we had a slight breeze at the campground. Since we didn&#8217;t have internet service we pulled out a board game and a few card games. The kids didn&#8217;t seem to miss their phones until the next morning </p>
+
+
+
+<p>When leaving the campgeound I tried to go out a different way so they would still see the view only to discover that the road was closed. We ended up adding 2 hours to the drive so we skipped driving through Zion (my favorite park) and settled for viewing the Grand Staircase -Escalante National Monument as we headed to Cedar City.  It&#8217;s a stark and stunningly beautiful drive.  We chatted with the kids about the Cars movie and how you can see some of the inspiration on our drive. </p>
+
+
+
+<p>Once I snag some pictures I will update this post. </p>
+
+
+
+<p>Take care y&#8217;all </p>
+
+
+
+<p></p>
+			</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+					
+					
+		
+	</footer><!-- #entry-meta -->
+ps://roadtrip.meenan.us/?p=1739" title="Permalink to Finally" rel="bookmark">Finally</a></h1>
+					<span class="media-posted-on">
+				Posted on <a href="https://roadtrip.meenan.us/?p=1739" title="11:21 AM" rel="bookmark"><time class="entry-date" datetime="2020-08-12T11:21:31-04:00" pubdate>August 12, 2020</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://roadtrip.meenan.us/?author=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>							</span>
+			</header><!-- .entry-header -->
+		<div class="entry-content">
+		
+<p>We have had a busy few days. We are on the west coast near Pismo Beach. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1280" height="960" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6217.jpg" alt="" class="wp-image-1737" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6217.jpg 1280w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6217-300x225.jpg 30/2020/08/img_6217-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /></figure>
+
+
+
+<p>We had a few uneventful days crossing into Arizona  and then stopping in Barstow Cali where the temp was 106. Even better it was laundry day with no ac or fan in the campgeound laundry room. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="960" height="1280" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6192.jpg" alt="" class="wp-image-1738" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6192.jpg 960w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6192-225x300.jpg 225w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6192-768x1024.jpg 768w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6192-113x150.jpg 113w" sizes="(max-width: 960px) 100vw, 960px" /></figure>
+
+
+
+<p>I figured out a temporary way to filter campground water. Next year I hope just to put a filtered </p>
+
+
+
+<p>dispenser in at the sink. I had purchased an inline filter but it keeps leaking and I don&#8217;t like to waste water. In the meantime I have to put the filter in the sink and stuff things around it to protect it.  </p>
+
+
+
+<p>Today we head to Irvine to pick up my 2 nieces and my nephew. It&#8217;s not many miles but there is a huge increase in traffic so it will be a bit stressful as I expect to be cut off quite a bit. Most stressful time will be trying to get into a gas station with the trailer attached. While traveling we can easily use travel stops which are much larger gas stations. Quite a bit different from a 4 pump gas station in a city with a large dip entering and exiting the station. What fun!</p>
+
+
+
+<p>Take care y&#8217;all and here are a few random pictures from today. </p>
+
+
+
+<figure class="wp-block-gallery columns-3 is-cropped wp-block-gallery-1 is-layout-flex wp-block-gallery-is-layout-flex"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><img decoding="async" loading="lazy" width="1280" height="960" src="https:/>
+				<span class="post-day">5</span>
+				<span class="post-year">2020</span>
+				</a>
+			</div>
+		</div><!-- .entry-meta -->
+								<h1 class="entry-title"><a href="https://roadtrip.meenan.us/?p=1729" title="Permalink to Is it deja Vu?" rel="bookmark">Is it deja Vu?</a></h1>
+					<span class="media-posted-on">
+				Posted on <a href="https://roadtrip.meenan.us/?p=1729" title="10:29 PM" rel="bookmark"><time class="entry-date" datetime="2020-08-05T22:29:30-04:00" pubdate>August 5, 2020</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://roadtrip.meenan.us/?author=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>							</span>
+			</header><!-- .entry-header -->
+		<div class="entry-content">
+		
+<p>Nope.. I have been here before. Today we journeyed across the rest of Tennessee and crossed the Mississippi River to land in Marion, Arkansas. While this campground isn’t highly rated by some, this is actually my second stay here.  </p>
+
+
+
+<figurmg_6029-300x225.jpg 300w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6029-1024x768.jpg 1024w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6029-150x113.jpg 150w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6029-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /><figcaption>Dog park</figcaption></figure>
+
+
+
+<p>I actually stayed here with my boys back in 2014 on our first adventure with our first travel trailer. There have been a few changes since then. The pool is closed since covid and most likely won’t reopen until next year. They also improved the dog park (another area where they need a bit of paint).  </p>
+
+
+
+<p>After unhitching and hooking up the trailer we headed into Memphis to do a drive by of Graceland. The grounds looked green and shady but neither of us was up to walking much after Dollywood yesterday. We had a great dinner at Marlowe’s Ribs and checked out their in restaurant gift store and Elvis paraphernalia scattered around. </p>
+
+
+
+<figuor=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>							</span>
+			</header><!-- .entry-header -->
+		<div class="entry-content">
+		
+<p>Today we spent the day in Dollywood. For those that live in Virginia it has a similar feel to Busch Gardens with trees and hills. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" loading="lazy" width="1280" height="960" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5991.jpg" alt="" class="wp-image-1720" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5991.jpg 1280w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5991-300x225.jpg 300w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5991-1024x768.jpg 1024w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5991-150x113.jpg 150w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5991-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /><figcaption>Margie at the main sign inside the park</figcapti020/08/img_5952.jpg" alt="" class="wp-image-1722" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5952.jpg 1280w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5952-300x225.jpg 300w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5952-1024x768.jpg 1024w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5952-150x113.jpg 150w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5952-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /><figcaption>Family style meal with pot roast, fried chicken, corn, mashed potatoes, Brussels sprouts and pinto beans </figcaption></figure>
+
+
+
+<p>Max has a good time at Doggywood which was difficult at first to locate as I paid for preferred parking which has a different entrance into the park. We did finally find it off to the aide of the main entrance and Max settled in for a 6 hour stay. There were a variety of different prices for boarding your pet there and if you have a second dog it’s $5 extra. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" loading="lazy" width="1280" height="960" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5919.jpg" alt="" class="wp-image-1723" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5919.jpg 1280w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5919-300x225.jpg 300w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5919-1024x768.jpg 1024w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5919-150x113.jpg 150w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5919-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /><figcaption>You can see Doggywood off to the right</figcaption></figure>
+
+
+
+<p>Tomorrow we head to Memphis. </p>
+
+
+
+<p>Take care y’all </p>
+
+
+
+<p></p>
+			</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+					
+					
+		
+	</footer><!-- #entry-meta -->
+</article><!-- #post-1724 -->
+<hr />
+
+				
+					
+<article id="post-1713" class="post-1713 post type-pos">3</span>
+				<span class="post-year">2020</span>
+				</a>
+			</div>
+		</div><!-- .entry-meta -->
+								<h1 class="entry-title"><a href="https://roadtrip.meenan.us/?p=1713" title="Permalink to Back in the saddle again&#8230;" rel="bookmark">Back in the saddle again&#8230;</a></h1>
+					<span class="media-posted-on">
+				Posted on <a href="https://roadtrip.meenan.us/?p=1713" title="9:59 PM" rel="bookmark"><time class="entry-date" datetime="2020-08-03T21:59:20-04:00" pubdate>August 3, 2020</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://roadtrip.meenan.us/?author=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>							</span>
+			</header><!-- .entry-header -->
+		<div class="entry-content">
+		
+<p>Another year and another trip underway. This year I am driving my travel trailer to California to pick up my nieces and my nephew. Since we have a travel trailer we can be self contained.  I can order groceries and pick them up at the store wad.  We have changed things up a bit.  Brian, my oldest, is working at Jax Performance learning how to repair cars.  He would love to focus on the performance end, but he knows he needs to learn general repairs first so he is out of going on trips.  Sean, now almost 17, will be home during summer taking computer programming courses to help him obtain a job when he graduates June 2020 so he is also out.  Pat needs to have consistent computer internet access, so he is out as well.  Occasionally the boys might come along on my jaunts, but it won&#8217;t be often.  This leaves me with dragging my friends kids along on trips.</p>
+
+
+
+<p>The plan is to take my best friend&#8217;s two kids on a quick trip this summer and drop them off at their Grandparents in Boerne, Tx.  Before I do that, I will be on a Spring Break trip to DE.  I am going to help another best friends son install kitchen cabinets (provided there aren&#8217;t unknown issues).  Sean and Pat will both be coming with me! Our campsite is a short walk to s/wp-content/uploads/2016/07/wp-image-225607995jpg.jpg" alt="" class="wp-image-1683 alignnone size-full" width="720" height="1280"></a></p>
+<p>We entered this ferry in a completely different manner and the kids were happy to see we had another 4 berth cabin. Especially when they learned we would be on this ferry overnight.&nbsp;</p>
+<p>.&nbsp;</p>
+			</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+					
+					
+		
+	</footer><!-- #entry-meta -->
+</article><!-- #post-1684 -->
+<hr />
+
+				
+					
+<article id="post-1681" class="post-1681 post type-post status-publish format-standard hentry category-uncategorized">
+	<header class="entry-header">
+				<div class="entry-meta">
+			<div class="post-date">
+				<a href="https://roadtrip.meenan.us/?p=1681" rel="bookmark" title="Permanent Link to Day 15/16 &#8211; St. John&#8217;s">
+				<span class="post-month">Jul</span>
+				<span class="post-day">3</span>
+				<span class="post-year">2016</span>
+				</a>
+			</div>
+		</div><!-- .entry-meta -->
+								<h1 class="s/wp-content/uploads/2016/07/wp-image-1382736899jpg.jpg" alt="" width="1280" height="720" srcset="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1382736899jpg.jpg 1280w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1382736899jpg-150x84.jpg 150w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1382736899jpg-300x169.jpg 300w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1382736899jpg-768x432.jpg 768w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1382736899jpg-1024x576.jpg 1024w" sizes="(max-width: 1280px) 100vw, 1280px" /></a></p>
+<p>While we weren&#8217;t able to get a picnic (from Lighthouse Picnics) we did walk out to the lighthouse. &nbsp;Although reluctant at first, both boys enjoyed the walk. Brian was even nice to Sean and gave a ride at one point.&nbsp;<br />
+<a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1852132234jpg.jpg"><img decoding="async" loading="lazy" class="wp-image-1679 alignnone size class="hoth-dash hoth-minutes_dash"><div class="hoth-dash_title">minutes</div><div class="hoth-digit">-5</div><div class="hoth-digit">0</div></div><div class="hoth-dash hoth-seconds_dash"><div class="hoth-dash_title">seconds</div><div class="hoth-digit">-4</div><div class="hoth-digit">-6</div></div></div><div id="countdowntimer-2-bothtml" class="hoth-bothtml"></div></div></div></aside><aside id="search-2" class="widget widget_search">	<form method="get" id="searchform" action="https://roadtrip.meenan.us/" role="search">
+		<label for="s" class="assistive-text">Search</label>
+		<input type="text" class="field" name="s" id="s" placeholder="Search &hellip;" />
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search" />
+	</form>
+</aside>
+		<aside id="recent-posts-2" class="widget widget_recent_entries">
+		<h2 class="widget-title">Recent Posts</h2>
+		<ul>
+											<li>
+					<a href="https://roadtrip.meenan.us/?p=1752">It&#8217;s been a long time&#8230;</a>
+									</li>
+											<lmeenan.us/?tag=alberta" class="tag-cloud-link tag-link-43 tag-link-position-1" style="font-size: 8pt;" aria-label="Alberta (1 item)">Alberta</a>
+<a href="https://roadtrip.meenan.us/?tag=arctic-circle" class="tag-cloud-link tag-link-35 tag-link-position-2" style="font-size: 8pt;" aria-label="Arctic Circle (1 item)">Arctic Circle</a>
+<a href="https://roadtrip.meenan.us/?tag=banff" class="tag-cloud-link tag-link-44 tag-link-position-3" style="font-size: 8pt;" aria-label="Banff (1 item)">Banff</a>
+<a href="https://roadtrip.meenan.us/?tag=bc" class="tag-cloud-link tag-link-24 tag-link-position-4" style="font-size: 22pt;" aria-label="BC (2 items)">BC</a>
+<a href="https://roadtrip.meenan.us/?tag=bear" class="tag-cloud-link tag-link-51 tag-link-position-5" style="font-size: 8pt;" aria-label="Bear (1 item)">Bear</a>
+<a href="https://roadtrip.meenan.us/?tag=border-crossing" class="tag-cloud-link tag-link-37 tag-link-position-6" style="font-size: 8pt;" aria-label="border crossing (1 item)">border crossing</a>
+<a href="https://roadtrip.meenan.us/?tag=boys" class="tag-cloud-link tag-link-16 tag-link-position-7" style="font-size: 8pt;" aria-label="boys (1 item)">boys</a>
+<a href="https://roadtrip.meenan.us/?tag=brian" class="tag-cloud-link tag-link-14 tag-link-position-8" style="font-size: 8pt;" aria-label="Brian (1 item)">Brian</a>
+<a href="https://roadtrip.meenan.us/?tag=campground" class="tag-cloud-link tag-link-60 tag-link-position-9" style="font-size: 8pt;" aria-label="Campground (1 item)">Campground</a>
+<a href="https://roadtrip.meenan.us/?tag=canmore" class="tag-cloud-link tag-link-42 tag-link-position-10" style="font-size: 8pt;" aria-label="Canmore (1 item)">Canmore</a>
+<a href="https://roadtrip.meenan.us/?tag=caves" class="tag-cloud-link tag-link-18 tag-link-position-11" style="font-size: 8pt;" aria-label="Caves (1 item)">Caves</a>
+<a href="https://roadtrip.meenan.us/?tag=dogs" class="tag-cloud-link tag-link-58 tag-link-position-12" style="font-size: 8pt;" aria-label="Dogs (1 item)">Dogs</a>
+<a href="roadtrip.meenan.us/?tag=food" class="tag-cloud-link tag-link-12 tag-link-position-13" style="font-size: 8pt;" aria-label="food (1 item)">food</a>
+<a href="https://roadtrip.meenan.us/?tag=go-carts" class="tag-cloud-link tag-link-19 tag-link-position-14" style="font-size: 8pt;" aria-label="go-carts (1 item)">go-carts</a>
+<a href="https://roadtrip.meenan.us/?tag=guide" class="tag-cloud-link tag-link-53 tag-link-position-15" style="font-size: 8pt;" aria-label="Guide (1 item)">Guide</a>
+<a href="https://roadtrip.meenan.us/?tag=hazelton" class="tag-cloud-link tag-link-48 tag-link-position-16" style="font-size: 8pt;" aria-label="Hazelton (1 item)">Hazelton</a>
+<a href="https://roadtrip.meenan.us/?tag=helicopter" class="tag-cloud-link tag-link-56 tag-link-position-17" style="font-size: 8pt;" aria-label="Helicopter (1 item)">Helicopter</a>
+<a href="https://roadtrip.meenan.us/?tag=hookups" class="tag-cloud-link tag-link-13 tag-link-position-18" style="font-size: 8pt;" aria-label="hookups (1 item)">hookups</a>
+<a href="https://roadtrip.meenan.us/?tag=hyder" class="tag-cloud-link tag-link-50 tag-link-position-19" style="font-size: 8pt;" aria-label="Hyder (1 item)">Hyder</a>
+<a href="https://roadtrip.meenan.us/?tag=indiana" class="tag-cloud-link tag-link-21 tag-link-position-20" style="font-size: 8pt;" aria-label="Indiana (1 item)">Indiana</a>
+<a href="https://roadtrip.meenan.us/?tag=iowa" class="tag-cloud-link tag-link-22 tag-link-position-21" style="font-size: 8pt;" aria-label="Iowa (1 item)">Iowa</a>
+<a href="https://roadtrip.meenan.us/?tag=lake-louise" class="tag-cloud-link tag-link-45 tag-link-position-22" style="font-size: 8pt;" aria-label="Lake Louise (1 item)">Lake Louise</a>
+<a href="https://roadtrip.meenan.us/?tag=mods" class="tag-cloud-link tag-link-9 tag-link-position-23" style="font-size: 8pt;" aria-label="Mods (1 item)">Mods</a>
+<a href="https://roadtrip.meenan.us/?tag=montana" class="tag-cloud-link tag-link-41 tag-link-position-24" style="font-size: 8pt;" aria-label="Montana (1 item)">Montana</a>
+<a hrefmeenan.us/?tag=mosquitoes" class="tag-cloud-link tag-link-26 tag-link-position-25" style="font-size: 22pt;" aria-label="Mosquitoes (2 items)">Mosquitoes</a>
+<a href="https://roadtrip.meenan.us/?tag=nj" class="tag-cloud-link tag-link-61 tag-link-position-26" style="font-size: 8pt;" aria-label="NJ (1 item)">NJ</a>
+<a href="https://roadtrip.meenan.us/?tag=north-dakota" class="tag-cloud-link tag-link-40 tag-link-position-27" style="font-size: 8pt;" aria-label="North Dakota (1 item)">North Dakota</a>
+<a href="https://roadtrip.meenan.us/?tag=pennsylvania" class="tag-cloud-link tag-link-20 tag-link-position-28" style="font-size: 8pt;" aria-label="Pennsylvania (1 item)">Pennsylvania</a>
+<a href="https://roadtrip.meenan.us/?tag=plane" class="tag-cloud-link tag-link-54 tag-link-position-29" style="font-size: 8pt;" aria-label="Plane (1 item)">Plane</a>
+<a href="https://roadtrip.meenan.us/?tag=restaurant" class="tag-cloud-link tag-link-59 tag-link-position-30" style="font-size: 8pt;" aria-label="Restaurant (1 item)">Restaurant</a>
+<a href="https://roadtrip.meenan.us/?tag=ri" class="tag-cloud-link tag-link-62 tag-link-position-31" style="font-size: 8pt;" aria-label="RI (1 item)">RI</a>
+<a href="https://roadtrip.meenan.us/?tag=riverboat" class="tag-cloud-link tag-link-36 tag-link-position-32" style="font-size: 8pt;" aria-label="Riverboat (1 item)">Riverboat</a>
+<a href="https://roadtrip.meenan.us/?tag=sean" class="tag-cloud-link tag-link-15 tag-link-position-33" style="font-size: 8pt;" aria-label="Sean (1 item)">Sean</a>
+<a href="https://roadtrip.meenan.us/?tag=set-up" class="tag-cloud-link tag-link-11 tag-link-position-34" style="font-size: 8pt;" aria-label="set up (1 item)">set up</a>
+<a href="hdtrip.meenan.us/?tag=seward" class="tag-cloud-link tag-link-55 tag-link-position-35" style="font-size: 8pt;" aria-label="Seward (1 item)">Seward</a>
+<a href="https://roadtrip.meenan.us/?tag=sled" class="tag-cloud-link tag-link-57 tag-link-position-36" style="font-size: 8pt;" aria-label="Sled (1 item)">Sled</a>
+<a href="https://roadtrip.meenan.us/?tag=sleeping" class="tag-cloud-link tag-link-10 tag-link-position-37" style="font-size: 8pt;" aria-label="sleeping (1 item)">sleeping</a>
+<a href="https://roadtrip.meenan.us/?tag=sourdough" class="tag-cloud-link tag-link-39 tag-link-position-38" style="font-size: 8pt;" aria-label="Sourdough (1 item)">Sourdough</a>
+<a href="https://roadtrip.meenan.us/?tag=stewart" class="tag-cloud-link tag-link-49 tag-link-position-39" style="font-size: 8pt;" aria-label="Stewart (1 item)">Stewart</a>
+<a href="https://roadtrip.meenan.us/?tag=talkeetna" class="tag-cloud-link tag-link-52 tag-link-position-40" style="font-size: 8pt;" aria-label="Talkeetna (1 item)">Talkeetna</a>
+<a href="eenan.us/?tag=tennessee" class="tag-cloud-link tag-link-17 tag-link-position-41" style="font-size: 8pt;" aria-label="Tennessee (1 item)">Tennessee</a>
+<a href="https://roadtrip.meenan.us/?tag=tok" class="tag-cloud-link tag-link-38 tag-link-position-42" style="font-size: 8pt;" aria-label="Tok (1 item)">Tok</a>
+<a href="https://roadtrip.meenan.us/?tag=trailer" class="tag-cloud-link tag-link-8 tag-link-position-43" style="font-size: 8pt;" aria-label="Trailer (1 item)">Trailer</a>
+<a href="https://roadtrip.meenan.us/?tag=valemount" class="tag-cloud-link tag-link-46 tag-link-position-44" style="font-size: 8pt;" aria-label="Valemount (1 item)">Valemount</a>
+<a href="https://roadtrip.meenan.us/?tag=vanderhoof" class="tag-cloud-link tag-link-47 tag-link-position-45" style="font-size: 8pt;" aria-label="Vanderhoof (1 item)">Vanderhoof</a></div>
+</aside><aside id="archives-2" class="widget widget_archive"><h2 class="widget-title">Archives</h2>
+			<ul>
+					<li><a href='https://roadtrip.meenan.us/?m=202008'>August 2020</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201910'>October 2019</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201905'>May 2019</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201607'>July 2016</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201606'>June 2016</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201601'>January 2016</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201508'>August 2015</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201507'>July 2015</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201506'>June 2015</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201407'>July 2014</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201406'>June 2014</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201401'>January 2014</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201308'>August 2013</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201307'>July 2013</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201306'>June 2013</a><ta-thumbnail="https://roadtrip.meenan.us/wp-content/gallery/where-have-we-been/thumbs/thumbs_usa-map.jpg"
+           data-image-id="2488"
+           data-title="usa-map"
+           data-description=""
+           class="shutterset_e8bd5f307924945d9daada7c8ddaa982">
+
+            <img data-image-id='2488'
+                 title=""
+                 alt="usa-map"
+                 src="https://roadtrip.meenan.us/wp-content/gallery/where-have-we-been/usa-map.jpg"
+                 style="max-height: 100px;"/>
+        </a>
+
+        </div> 
+<div id="ngg-image-1" class="ngg-gallery-slideshow-image" style="height:120px">
+
+        <a href="https://roadtrip.meenan.us/wp-content/gallery/where-have-we-been/canada.jpg"
+           title=""
+           data-src="https://roadtrip.meenan.us/wp-content/gallery/where-have-we-been/canada.jpg"
+           data-thumbnail="https://roadtrip.meenan.us/wp-content/gallery/where-have-we-been/thumbs/thumbs_canada.jpg"
+           data-image-id="2489"
+           data-title="canada"
+           daery/where-have-we-been/canada.jpg"
+                 style="max-height: 100px;"/>
+        </a>
+
+        </div> 
+</div>
+
+
+
+</div>
+</aside><aside id="meta-2" class="widget widget_meta"><h2 class="widget-title">Meta</h2>
+		<ul>
+			<li><a href="https://roadtrip.meenan.us/wp-login.php?action=register">Register</a></li>			<li><a href="https://roadtrip.meenan.us/wp-login.php">Log in</a></li>
+			<li><a href="https://roadtrip.meenan.us/?feed=rss2">Entries feed</a></li>
+			<li><a href="https://roadtrip.meenan.us/?feed=comments-rss2">Comments feed</a></li>
+
+			<li><a href="https://wordpress.org/">WordPress.org</a></li>
+		</ul>
+
+		</aside><aside id="countdowntimer-3" class="widget CountDownTimer"><h2 class="widget-title">Next Trip</h2><div id="countdowntimer-3-countdown" class="tminus_countdown" style="width:auto; height:auto;"><div class="hoth-countdown "><div id="countdowntimer-3-tophtml" class="hoth-tophtml"></div><div id="countdowntimer-3-dashboard" class="hoth-dashboard"><div class="hoth-dash hoth-weeks_dash"><div cl></div></aside>		</div><!-- #secondary .widget-area -->
+
+	</div><!-- #main -->
+	<footer id="colophon" class="site-footer" role="contentinfo">
+		<div class="footer-sidebars">
+					<div id="tertiary-1" class="footer-sidebar" role="complementary">
+											</div><!-- #tertiary .footer-sidebar -->
+		<div id="tertiary-2" class="footer-sidebar" role="complementary">
+											</div><!-- #tertiary .footer-sidebar -->
+		<div id="tertiary-3" class="footer-sidebar" role="complementary">
+											</div><!-- #tertiary .footer-sidebar -->
+			<div class="stripes">&nbsp;</div>
+		</div>
+		<div class="site-info">
+						<a href="http://wordpress.org/" title="A Semantic Personal Publishing Platform" rel="generator">Proudly powered by WordPress</a>
+			<span class="sep"> | </span>
+			Theme: Scrappy by <a href="http://carolinemoore.net/" rel="designer">Caroline Moore</a>		</div><!-- .site-info -->
+	</footer><!-- .site-footer .site-footer -->
+</div><!-- #page .hfeed .site -->
+
+<link rel='stylesheet' id='dashicons-css' href='https://roadtrip.meenan.us/wp-includes/css/dashicons.min.css?ver=bdecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='gllr_stylesheet-css' href='https://roadtrip.meenan.us/wp-content/plugins/gallery-plugin/css/frontend_style.css?ver=4.7.0' type='text/css' media='all' />
+<link rel='stylesheet' id='gllr_fancybox_stylesheet-css' href='https://roadtrip.meenan.us/wp-content/plugins/gallery-plugin/fancybox/jquery.fancybox.min.css?ver=4.7.0' type='text/css' media='all' />
+<link rel='stylesheet' id='countdown-hoth-css-css' href='https://roadtrip.meenan.us/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=2.0' type='text/css' media='all' />
+<style id='core-block-supports-inline-css' type='text/css'>
+.wp-block-gallery.wp-block-gallery-1{--wp--style--unstable-gallery-gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );gap:var( --wp--xt/javascript' src='https://roadtrip.meenan.us/wp-content/themes/scrappy/js/small-menu.js?ver=20120206' id='small-menu-js'></script>
+<script type='text/javascript' id='ngg_common-js-extra'>
+/* <![CDATA[ */
+
+var galleries = {};
+galleries.gallery_e8bd5f307924945d9daada7c8ddaa982 = {"id":null,"ids":null,"source":"galleries","src":"","container_ids":["37"],"gallery_ids":[],"album_ids":[],"tag_ids":[],"display_type":"photocrati-nextgen_basic_slideshow","display":"","exclusions":[],"order_by":"sortorder","order_direction":"ASC","image_ids":[],"entity_ids":[],"tagcloud":false,"returns":"included","slug":"widget-slideshow-2","sortorder":[],"display_settings":{"gallery_width":160,"gallery_height":120,"cycle_effect":"fade","cycle_interval":"10","flash_enabled":"0","flash_background_music":"","flash_stretch_image":"true","flash_transition_effect":"random","flash_shuffle":"1","flash_next_on_click":"1","flash_navigation_bar":"0","flash_loading_icon":"0","flash_watermark_logo":"0","flash_slow_zoom":"0","flash_xhtml_validation":"0","flash_background_color":"000000","flash_text_color":"FFFFFF","flash_rollover_color":"CC0000","flash_screen_color":"000000","show_thumbnail_link":false,"thumbnail_link_text":"[Show picture list]","use_lightbox_effect":true,"thumbnail_width":100,"thumbnail_height":75,"flash_path":"http:\/\/roadtrip.meenan.us\/wp-content\/plugins\/nextgen-gallery\/imagerotator.swf","effect_code":"class=\"shutterset_%GALLERY_NAME%\"","template":"","ngg_triggers_display":"never","_errors":[],"display_view":"default","autoplay":1,"pauseonhover":1,"arrows":0,"interval":3000,"transition_speed":300,"transition_style":"fade","entity_types":["image"],"show_slideshow_link":false,"use_imagebrowser_effect":false},"excluded_container_ids":[],"maximum_entity_count":500,"__defaults_set":true,"_errors":[],"ID":"e8bd5f307924945d9daada7c8ddaa982"};
+galleries.gallery_e8bd5f307924945d9daada7c8ddaa982.wordpress_page_root = "https:\/\/roadtrip.meenan.us\/?p=1752";
+var nextgen_lightbox_settings = {"static_path":"https:\/\/roaightbox/static/lightbox_context.js?ver=3.37' id='ngg_lightbox_context-js'></script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/shutter.js?ver=3.37' id='shutter-0-js'></script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/nextgen_shutter.js?ver=3.37' id='shutter-1-js'></script>
+<script id="gllr_enable_lightbox_ios-js-after" type="text/javascript">
+			( function( $ ){
+				$( document ).ready( function() {
+					$( '#fancybox-overlay' ).css( {
+						'width' : $( document ).width()
+					} );
+				} );
+			} )( jQuery );
+			
+</script>
+		<script language="javascript" type="text/javascript">
+			jQuery(document).ready(function($) {
+			$('#countdowntimer-2-dashboard').tminusCountDown({
+			targetDate: {
+				'day': 	24,
+				'month': 10,
+				'year': 2019,
+				'hour': 21,
+				'min': 	45,
+				themes/scrappy/img/bg.gif"); background-position: left top; background-size: auto; background-repeat: repeat; background-attachment: scroll; }
+</style>
+	</head>
+
+<body class="archive date custom-background gllr_scrappy-demo.calobeedoodles.com">
+<div id="page" class="hfeed site">
+		<header id="masthead" class="site-header" role="banner">
+		<div class="stripes"></div>
+				<hgroup>
+			<h1 class="site-title"><a href="https://roadtrip.meenan.us/" title="Are we there yet?" rel="home">Are we there yet?</a></h1>
+			<h2 class="site-description">Our insanity, one trip at a time.</h2>
+		</hgroup>
+
+		<nav role="navigation" class="site-navigation main-navigation">
+			<h1 class="assistive-text">Menu</h1>
+			<div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+			<div class="menu-home-sweet-home-container"><ul id="menu-home-sweet-home" class="menu"><li id="menu-item-36" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-36"><a href="h="entry-title"><a href="https://roadtrip.meenan.us/?p=1684" title="Permalink to Day 17 &#8211; Overnight " rel="bookmark">Day 17 &#8211; Overnight </a></h1>
+					<span class="media-posted-on">
+				Posted on <a href="https://roadtrip.meenan.us/?p=1684" title="5:30 PM" rel="bookmark"><time class="entry-date" datetime="2016-07-03T17:30:53-04:00" pubdate>July 3, 2016</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://roadtrip.meenan.us/?author=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>							</span>
+			</header><!-- .entry-header -->
+		<div class="entry-content">
+		<p>Today we drove to Argentia to the Marine Atlantic ferry terminal. It&#8217;s a bit more restrictive than the Sydney terminal. If you enter the building you need your ID and password ticket to get back to your car.&nbsp;</p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-225607995jpg.jpg"><img decoding="async" fetchpriority="high" src="https:or">klmeenan</a></span></span>							</span>
+			</header><!-- .entry-header -->
+		<div class="entry-content">
+		<p>Well the middle of Newfoundland. &nbsp;We stayed in a hotel in Gander. Brian mentioned how the landscape made him think he was in Ireland (not that we have been there). &nbsp;</p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1492460626jpg.jpg"><img decoding="async" loading="lazy" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1492460626jpg.jpg" alt="" class="wp-image-1675 alignnone size-full" width="1280" height="720"></a></p>
+<p>While in Gander, we ate at Jungle Jim&#8217;s and while the kids had burgers and fries I enjoyed a sweet n sour chicken dish.&nbsp;</p>
+<p>Tomorrow we head to the east coast.&nbsp;</p>
+<p>Later y&#8217;all</p>
+			</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+					
+					
+		
+	</footer><!-- #entry-meta -->
+</article><!-- #post-1676 -->
+<hr />
+
+				
+					
+<article id="post-1673" class="post-1673 post type-postay we drove to Cow Head, Newfoundland. &nbsp;We had to drive through Gros Morne National Park which is stunningly beautiful. &nbsp;We are staying 2 nights at the Shallow Bay Hotel &amp; &nbsp;Cabins.&nbsp;</p>
+<p><span id="img_container_1467494532937" class="img_container"><progress id="progress_1467494532937" value="0.9" class="wp_media_indicator" contenteditable="false"></progress></span><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-845087679jpg.jpg"><img decoding="async" loading="lazy" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-845087679jpg.jpg" alt="" class="wp-image-1672 alignnone size-full" width="1280" height="960"></a></p>
+<p>We stayed in a 2 bedroom cabin with small bedrooms but it had a restaurant and a nearby convenience store. While we were at the cabin we realized that the hike to Brooke Pond would be too far for Sean. &nbsp;Instead we had another laundry day and the boys caught up on their video games.&nbsp;</p>
+<p>I did manage to take them to ap>Today we headed to Halifax,&nbsp; Nova Scotia.&nbsp; However,&nbsp; we bypassed Halifax so I could take the kids to visit one of my favorite places I have ever visited.</p>
+<p>We drove down to Peggy&#8217;s Cove Lighthouse.&nbsp; This is one of the places I visited when I was in my early teens with my mom, younger brother, and my maternal grandparents.&nbsp; I have fond memories of climbing around the rocks for ages and also using imagery of the rocks for a college project.</p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-904282669jpg.jpg"><img decoding="async" loading="lazy" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-904282669jpg.jpg" alt="" class="wp-image-1656 alignnone size-full" width="1280" height="960"></a><br />
+I had quite a few flashes of myself in Brian as he scampered about (yes he really scampered). He had a blast climbing around and taking photos with his camera (thanks Pat) and also with his iPhone and then playing with filters.</p>
+			</"entry-content">
+		<p>Today we traveled into Maine. Originally I was going to take the boys to L.L.BEAN.&nbsp; However, since we missed flume gorge,&nbsp; I decided on visiting a light house near Bar Harbor.&nbsp; </p>
+<p>We visited Bass Harbor Head lighthouse.&nbsp; It was approximately an hour from our hotel but we all enjoyed the scenery.&nbsp; We actually drove a longer route in the way back from the. lighthouse and had our windows down to enjoy the sea air. </p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/screenshot_2016-06-20-17-59-36-1-1.jpg"><img decoding="async" title="Screenshot_2016-06-20-17-59-36-1.jpg" class="alignnone size-full"  alt="image" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/screenshot_2016-06-20-17-59-36-1-1.jpg" /></a></p>
+<p>Due to our current Internet connection we can&#8217;t upload photos from our camera. Luckily, Sean usually reminds us that we need to take a selfie.&nbsp; </p>
+<p>Next up,&nbsp; New Brunswick, Canada. </p>
+<p> Take care y&#82timer-3-countdown" class="tminus_countdown" style="width:auto; height:auto;"><div class="hoth-countdown "><div id="countdowntimer-3-tophtml" class="hoth-tophtml"></div><div id="countdowntimer-3-dashboard" class="hoth-dashboard"><div class="hoth-dash hoth-weeks_dash"><div class="hoth-dash_title">weeks</div><div class="hoth-digit">-29</div><div class="hoth-digit">0</div></div><div class="hoth-dash hoth-days_dash"><div class="hoth-dash_title">days</div><div class="hoth-digit">0</div><div class="hoth-digit">-2</div></div><div class="hoth-dash hoth-hours_dash"><div class="hoth-dash_title">hours</div><div class="hoth-digit">-1</div><div class="hoth-digit">-3</div></div><div class="hoth-dash hoth-minutes_dash"><div class="hoth-dash_title">minutes</div><div class="hoth-digit">-3</div><div class="hoth-digit">-5</div></div><div class="hoth-dash hoth-seconds_dash"><div class="hoth-dash_title">seconds</div><div class="hoth-digit">-4</div><div class="hoth-digit">-8</div></div></div><div id="countdowntimer-3-bothtml" classecc9508c63fe3556cd82306a24840c' type='text/css' media='all' />
+<link rel='stylesheet' id='gllr_stylesheet-css' href='https://roadtrip.meenan.us/wp-content/plugins/gallery-plugin/css/frontend_style.css?ver=4.7.0' type='text/css' media='all' />
+<link rel='stylesheet' id='gllr_fancybox_stylesheet-css' href='https://roadtrip.meenan.us/wp-content/plugins/gallery-plugin/fancybox/jquery.fancybox.min.css?ver=4.7.0' type='text/css' media='all' />
+<link rel='stylesheet' id='countdown-hoth-css-css' href='https://roadtrip.meenan.us/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=2.0' type='text/css' media='all' />
+<script type='text/javascript' id='countdown-script-js-extra'>
+/* <![CDATA[ */
+var tCountAjax = {"ajaxurl":"https:\/\/roadtrip.meenan.us\/wp-admin\/admin-ajax.php","countdownNonce":"88bf4990ed"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/jquery-t-countdown-widget/js/jquery.t-countdown.js?ver=2.4.0' id='countdown-script-js'></script>ada7c8ddaa982"};
+galleries.gallery_e8bd5f307924945d9daada7c8ddaa982.wordpress_page_root = "https:\/\/roadtrip.meenan.us\/?p=1684";
+var nextgen_lightbox_settings = {"static_path":"https:\/\/roadtrip.meenan.us\/wp-content\/plugins\/nextgen-gallery\/products\/photocrati_nextgen\/modules\/lightbox\/static\/{placeholder}","context":"nextgen_images"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://roadtrip.meenan.us/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/common.js?ver=3.37' id='ngg_common-js'></script>
+<script id="ngg_common-js-after" type="text/javascript">
+var nggLastTimeoutVal = 1000;
+
+			var nggRetryFailedImage = function(img) {
+				setTimeout(function(){
+					img.src = img.src;
+				}, nggLastTimeoutVal);
+			
+				nggLastTimeoutVal += 500;
+			}
+</script>
+<script type='text/javascript' id='ngg_lightbox_context-js-extra'>
+/* <![CDATA[ */
+
+var nextgen_shutter_i18n = {"msgLoading":"L O A D I N G","msgClose":"Click to Close"};
+/* ]]> */
+<k rel="https://api.w.org/" href="https://roadtrip.meenan.us/index.php?rest_route=/" /><link rel="alternate" type="application/json" href="https://roadtrip.meenan.us/index.php?rest_route=/wp/v2/posts/1684" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://roadtrip.meenan.us/xmlrpc.php?rsd" />
+
+<link rel="canonical" href="https://roadtrip.meenan.us/?p=1684" />
+<link rel='shortlink' href='https://roadtrip.meenan.us/?p=1684' />
+<link rel="alternate" type="application/json+oembed" href="https://roadtrip.meenan.us/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=https%3A%2F%2Froadtrip.meenan.us%2F%3Fp%3D1684" />
+<link rel="alternate" type="text/xml+oembed" href="https://roadtrip.meenan.us/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=https%3A%2F%2Froadtrip.meenan.us%2F%3Fp%3D1684&#038;format=xml" />
+			<style type="text/css">
+				.gllr_image_row {
+					clear: both;
+				}
+			</style>
+			<script type='text/javascript'>
+var tminusnow = '{"now":"10\/29\/2024 12:34:48"}';
+</script>	ploads/2016/07/wp-image-1366279720jpg.jpg"><img decoding="async" class="wp-image-1680 alignnone size-full" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1366279720jpg.jpg" alt="" width="720" height="1280" srcset="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1366279720jpg.jpg 720w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1366279720jpg-84x150.jpg 84w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1366279720jpg-169x300.jpg 169w, https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1366279720jpg-576x1024.jpg 576w" sizes="(max-width: 720px) 100vw, 720px" /></a></p>
+<p>Our second day I walked around St. John&#8217;s looking in all the boutiques for gifts and souvenirs. &nbsp;This locale has bars all over the place. I&#8217;m sure all the cruise ship passengers spend a lot of time in the bars since there are so many.&nbsp;<br />
+Tomorrow we head out again to catch another ferry.&nbsp;</p>
+<p>Take care y&#8217;all</p>
+			</div>< language="javascript" type="text/javascript">
+			jQuery(document).ready(function($) {
+			$('#countdowntimer-2-dashboard').tminusCountDown({
+			targetDate: {
+				'day': 	24,
+				'month': 10,
+				'year': 2019,
+				'hour': 21,
+				'min': 	45,
+				'sec': 	00,
+				'localtime': '10/29/2024 12:34:49',
+			},
+			style: 'hoth',
+			launchtarget: 'countdown',
+			omitWeeks: 'false',
+			id: 'countdowntimer-2',
+			event_id: ''
+						});
+			$('#countdowntimer-3-dashboard').tminusCountDown({
+			targetDate: {
+				'day': 	15,
+				'month': 04,
+				'year': 2019,
+				'hour': 00,
+				'min': 	00,
+				'sec': 	00,
+				'localtime': '10/29/2024 12:34:49',
+			},
+			style: 'hoth',
+			launchtarget: 'countdown',
+			omitWeeks: 'false',
+			id: 'countdowntimer-3',
+			event_id: ''
+						});
+				});
+		</script>
+	
+</body>
+</html><!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Day 12/13 &#8211; Western Newfoundland  | Are we there</div>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>Today we hopped onto a car ferry to take us over to Newfoundland. &nbsp;While I have already visited the states and provinces we have driven to so far, &nbsp;this is the first new territory I have visited.&nbsp;</p>
+<p>The ferry terminal has quite a bit of space and plenty of room to stretch out while you wait to board the ferry (we had to be there 2 hrs before departure time) . They even have a bit of a park area that people were taking their pets to for a last potty break.&nbsp;</p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1738355432jpg.jpg"><img decoding="async" fetchpriority="high" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-1738355432jpg.jpg" alt="" class="wp-image-1669 alignnone size-full" width="720" height="1280"></a><br />
+We paid a bit extra for a 4 berth cabin instead of reserved seats or the first come first served seating. &nbsp;It was totally worth it.&nbsp;</p>
+<ppg.jpg"><img decoding="async" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-31844656jpg.jpg" alt="" class="wp-image-1648 alignnone size-full" width="720" height="1280"></a></p>
+<p>Both boys were able to stretch out and we didn&#8217;t have to worry about finding the bathroom (we had our own) and we didn&#8217;t worry about anyone stealing our stuff as our door locked. Brian even took a bit of a nap while Sean used his laptop (they had one outlet) to play games.&nbsp;</p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-2028644537jpg.jpg"><img decoding="async" src="https://roadtrip.meenan.us/wp-content/uploads/2016/07/wp-image-2028644537jpg.jpg" alt="" class="wp-image-1670 alignnone size-full" width="1280" height="720"></a><br />
+We enjoyed a great night at our hotel which was within 10 min of the ferry. One thing we did learn is that you often pay your dinning bill at the front desk of the hotel.</p>
+<p>Tomorrow we head up the western coast.&nbsp;</p>
+<p>Later Yhttps://roadtrip.meenan.us/?m=201303'>March 2013</a></li>
+	<li><a href='https://roadtrip.meenan.us/?m=201302'>February 2013</a></li>
+			</ul>
+
+			</aside><aside id="text-2" class="widget widget_text">			<div class="textwidget"><a href="http://pinterest.com/karinmeenan/"><img src="http://passets-cdn.pinterest.com/images/follow-on-pinterest-button.png" width="156" height="26" alt="Follow Me on Pinterest" /></a></div>
+		</aside><aside id="slideshow-2" class="widget widget_slideshow"><h2 class="widget-title">Where We Have Been</h2><div class="ngg_slideshow widget">
+    
+
+<div class="ngg-galleryoverview ngg-slideshow"
+	 id="ngg-slideshow-e8bd5f307924945d9daada7c8ddaa982-17552475040"
+     data-gallery-id="e8bd5f307924945d9daada7c8ddaa982"
+     style="max-width: 160px; max-height: 120px;">
+
+ 	<div id="ngg-image-0" class="ngg-gallery-slideshow-image" style="height:120px">
+
+        <a href="https://roadtrip.meenan.us/wp-content/gallery/where-have-we-been/usa-map.jpg"
+           title=""
+           data-src="https://roappy/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+<meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Are we there yet? &raquo; Feed" href="https://roadtrip.meenan.us/?feed=rss2" />
+<link rel="alternate" type="application/rss+xml" title="Are we there yet? &raquo; Comments Feed" href="https://roadtrip.meenan.us/?feed=comments-rss2" />
+<link rel="alternate" type="application/rss+xml" title="Are we there yet? &raquo; Where have we been Comments Feed" href="https://roadtrip.meenan.us/?feed=rss2&#038;page_id=1439" />
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/roadtrip.meenan.us\/wp-includes\/js\/wp-emoji-release.min.js?ver=bdecc9508c63fe3556cd82306a24840c"}};
+/*! This file -36"><a href="http://roadtrip.meenan.us/">Home</a></li>
+<li id="menu-item-1440" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1440"><a href="https://roadtrip.meenan.us/?page_id=1439">Where have we been</a></li>
+<li id="menu-item-59" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-56 current_page_item menu-item-59"><a href="https://roadtrip.meenan.us/?page_id=56" aria-current="page">About</a></li>
+</ul></div>		</nav>
+	</header><!-- #masthead .site-header -->
+
+	<div id="main">
+		<div id="primary" class="site-content">
+			<div id="content" role="main">
+
+				
+					
+<article id="post-56" class="post-56 page type-page status-publish hentry">
+	<header class="entry-header">
+				<h1 class="entry-title">About</h1>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>Who do I think I am?</p>
+<p><a href="https://roadtrip.meenan.us/wp-content/uploads/2013/04/41349b_ca7a634c566ccdfcf0174061f522221f_mi.jpg"><img decoding="async"for over 20 years.  I have a major in Recreation Administration from George Mason University and fell in love with working with young children while obtaining my degree.</p>
+<p>I have been thinking about taking my kids across the USA for quite a while.  I have fond memories of traveling with my grandparents every summer.  I am hoping to impart my grandparents adventurous spirit to my kids while encouraging them to disconnect from technology.</p>
+<p>My youngest son has a diagnosis of PDD-NOS and is on the Autism spectrum and my oldest has ADD which we chose to not medicate him for.  We will be juggling their special needs along with visiting some fun and educational places on this trip. It&#8217;s going to be a fun, but bumpy ride. I hope you will join us for some smiles, laughs and tear as we ride where the road takes us this summer.</p>
+			</div><!-- .entry-content -->
+	<span class="media-posted-on">
+			</span>
+</article><!-- #post-56 -->
+
+						<hr />
+	<div id="comments" class="comments-area">
+	
+	
+	
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/?page_id=56#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://roadtrip.meenan.us/wp-comments-post.php" method="post" id="commentform" class="comment-form"><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p><p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" autocomplete="name" required="required" /></p>
+<p class="comnonce" value="327bf04e4c" /></p><p style="display: none !important;"><label>&#916;<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="65"/><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p></form>	</div><!-- #respond -->
+	
+</div><!-- #comments .comments-area -->
+
+				
+			</div><!-- #content -->
+		</div><!-- #primary .site-content -->
+
+		<div id="secondary" class="widget-area" role="complementary">
+						<aside id="countdowntimer-2" class="widget CountDownTimer"><h2 class="widget-title">Until Next Trip</h2><div id="countdowntimer-2-countdown" class="tminus_countdown" style="width:auto; height:auto;"><div class="hoth-countdown "><div id="countdowntimer-2-tophtml" class="hoth-tophtml"></div><div id="countdowntimer-2-dashboard" class="hoth-dashboard"><div class="hoth-dash hoth-weeks_dash"><div class="hoth-dash_title">weeks</div><div class="hoth-digit">-26</div><div claslass="wp-caption-text">Welcome to the Yukon!</p></div>
+<p>June 30 &#8211; The first one is Nugget City outside of Watson Lake, YT and we do not have plans to return.  This is because I think it&#8217;s horrible to charge $10 for 5 hours of wifi that you can only get by the office while you are getting eaten by mosquitoes.  The bathrooms were great with very hot showers ($1 for 2.5 minutes)  and the laundry room was clean (we didn&#8217;t use them though).  The person who checked us in was very friendly, our water &amp; electric only site was easy to get into and was level.  We even had a few trees.  There is some noise from the busy road it&#8217;s off of, but with a/c I didn&#8217;t notice it while sleeping.  Fuel was available and the restaurant was excellent.  The cook even came out and joked with my kids about ketchup being a vegetable.  It&#8217;s ok for an overnight but next time we will try the Downtown RV Park.  No pictures of the campground as we completely forgot to take one.</p>
+<div id="coding="async" class="size-thumbnail wp-image-666" src="https://roadtrip.meenan.us/wp-content/uploads/2014/07/P1020464-150x150.jpg" alt="At a downtown gift store" width="150" height="150" /></a><p id="caption-attachment-666" class="wp-caption-text">At a downtown gift store</p></div>
+<p>July 1 &#8211; We originally were going to be at Nugget City for two days but only stayed one.  We headed to Whitehorse without reservations and our top two choices of campgrounds were full.  Instead we stayed at Mountain Ridge Motel &amp; RV Park.  We stayed here two days as we still hadn&#8217;t gotten to our laundry.  You are pretty much parked in the gravel lot of the hotel.  I was able to easily back into my site which was very level .  The first site we were going to use would have required us to run our full hookups to the other side of our rig.  Our second site was much easier with everything on the driver side.  The staff were very friendly and we would stay here again.</p>
+<div id="attachment_667" style="width &#8211; Next up we headed to Destruction Bay, YT.  We were very excited to see our first grizzly.  Then we drove a mile down the road and saw our second one.  An hour later and we saw another one.  Later on we drove to Destruction Bay Lodge and when we drove past the campground we decided to keep going.  We wanted something more than just a gravel lot.  We ended up in White River, YT and stayed at Discovery Yukon.  We will definitely return.  We had 30 amp full hook ups, on our graveled level site.  We loved the nightly campfire where you can chat with your neighbors while your roast marshmallows.  They usually drive you around on one of the military vehicles they have there (Brian loved seeing those). We all look forward to staying here on our return trip from Alaska.</p>
+<p>Later Y&#8217;all</p>
+			</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+					
+						<span class="tag-links">
+				Tagged <a href="https://roadtrip.meenan.us/?tag=mosquitoes" rel="tag">Mosquitoes</a>, <a href="httpent/uploads/2014/06/mosquitoes-150x150.jpeg" alt="mosquitoes" width="196" height="174" /></a>Mosquitoes really do suck. I wish there was a good way to keep the bloodsuckers away. They have plagued us yesterday while we stayed in Stewart, BC.  This area is usually visited by most travelers at the end of July and in August as that is when the salmon in this area runs and the bears arrive.  We visited just so we could see the area and visit Hyder, AK which has a population of 89.  Both areas are very small but all the business owners are very friendly.</p>
+<p>June 28 &#8211; We experienced the mosquitoes while setting up our campsite at Bear River RV Park.  We had asked for a pull through location, but upon arrival discovered that someone else was in our spot.  They moved us to 6A which technically wasn&#8217;t a pull through but you can see where people have driven through the spots to enable it to be a pull through.  We had to disconnect the jeep in as I had to do some maneuvering to get the Phaeton into the site.  It was a level spot with gravel.  I did have to go over a bit of grass/mud to &#8220;pull through&#8221; but it wasn&#8217;t a problem.  The site is lush and green and I should have taken that as a hint.  We were swarmed by mosquitoes while we set up.  Not only were we swarmed, we became infested by them in the RV.</p>
+<div id="attachment_407" style="width: 160px" class="wp-caption alignright"><a href="https://roadtrip.meenan.us/wp-content/uploads/2014/06/P1030226.jpg"><img aria-describedby="caption-attachment-407" decoding="async" loading="lazy" class="size-thumbnail wp-image-407" src="https://roadtrip.meenan.us/wp-content/uploads/2014/06/P1030226-150x150.jpg" alt="Bear in Stewart, BC" width="150" height="150" /></a><p id="caption-attachment-407" class="wp-caption-text">Bear in Stewart, BC</p></div>
+<p>We abandoned the rv and went for a drive into Stewart looking for an early dinner.  When I didn&#8217;t spot anything I felt the kids would eat, we drove into Hyder, AK.  We were glad we did when we spotted another bear.  We also discovered some great fudge at Caroline&#8217;s Boundary Gallery.  She also screen print&#8217;s t-shirts that she sells in her store.  The most amusing thing of the day is when we crossed into AK with no one at the border and then had to show our passports crossing back into BC.  Beyond the mosquitoes (which are beyond their control) our main issue is the wifi.  You are to only do email and browse the web.  There were 5 different routers to log onto (3 of which were near us) and we would get bogged down by others not obeying the rules.  Ok &#8211; I did upload one picture and sent it to my husbands phone, but I am not counting that.</p>
+<p>loading="lazy" class="size-thumbnail wp-image-406" src="https://roadtrip.meenan.us/wp-content/uploads/2014/06/P1030419-150x150.jpg" alt="Mountain Shadow" width="150" height="150" /></a><p id="caption-attachment-406" class="wp-caption-text">Mountain Shadow</p></div>
+<p>After fueling up, we headed to Mountain Shadow RV Park in Iskut, BC.  I couldn&#8217;t locate it on the Phaeton&#8217;s GPS so I was very thankful that I always check out the route online and on maps the night before.  The park is located after you see signs for Iskut and it has a very steep downhill drive.  If your looking for a new business the owners have put it up for sale.  They want to move closer to their grandkids.  It is a beautiful site.  My only issue with them (again other than mosquitoes) is that the only have electric and water at the sites.  They do have a dump station which is nearby but I won&#8217;t be able to get to it without disconnecting the Jeep so we will have to carry a full load of gray water when we travel to Watomorrow.  One of the greatest things about this campground (besides the level gravel sites) is that there are 2 bald eagles here.  I love my camera but I couldn&#8217;t zoom in and get a clear picture of them.  Of course they only allow emails and web browsing over their wifi.  I didn&#8217;t realize how often that would happen on this trip.*edited to add: Ok, found a second thing to bug me. We had to turn off our a/c by 9pm. I wish I had known about it before 8:45 pm. I would have run the a/c earlier. it was 85 in the RV. UGH!</p>
+<p>I almost forgot the two best things that happened today. We saw 6 bears, 3 of which were a mama and her cubs, and our neighbor at Mountain Shadow is also a member of RV.net. They have their roll call 2014 sign on the back of their toad. I completely forgot to make one. I will have to see what I can rig up for the rest of the trip.</p>
+<p>One day I will be able to upload photos (probably once I get to Tok, AK).  Until then&#8230;.</p>
+<p>Later Y&#8217;all</p>
+<p>&nbsp;</p>
+e is the wifi.  You are to only do email and browse the web.  There were 5 different routers to log onto (3 of which were near us) and we would get bogged down by others not obeying the rules.  Ok &#8211; I did upload one picture and sent it to my husbands phone, but I am not counting that.</p>
+<p>June 29 &#8211; We slept in due to the mosquitoes waking us up occasionally during the night.  Once we dragged ourselves out of bed we braved the mosquitoes and went into Stewart to fuel up.  Diesel is in an above ground tank to the left of the station.  It is full service so they pump the fuel for you.  You will have to wash your own window though.  I also purchased a 2.5 gallon container of DEF.  This station has a ton of auto parts in addition to a few sodas and candy bars.</p>
+<div id="attachment_406" style="width: 160px" class="wp-caption alignright"><a href="https://roadtrip.meenan.us/wp-content/uploads/2014/06/P1030419.jpg"><img aria-describedby="caption-attachment-406" decoding="async" class="size-t8217;t know, Nexus is a trusted traveler program between the US and Canada.  We filled out our applications online and had been waiting for our interview.  We chose Pembina, ND border crossing to do our interview.  This way we could get a third state off of our checklist (49th state for Nana) and get our interviews done at the same time.  We stayed in beautiful Icelandic State Park in Cavalier, ND.  The campground site was stunning.  It had 3 campsite loops and we were the only ones in our loop while we were there.  Both boys loved the playgrounds in each loop as well as visiting the lake.  It was a bit cool for them to swim, but they enjoyed the swings and chasing each other around after a long day in the RV.  The only negative was that they were having construction on their main entrance so we had to use the alternative, dusty and occasionally washboard, entrance.  Apparently the locals (and many Canadians as we were only 60 minutes from the border) fill up the park on the weekends.</p>
+<p><a hrefut as we were only staying overnight we had no problems.  The beauty of  narrow sites is that we end of talking to our neighbors.  I usually just say Hi and move on while my mom takes after my Grandfather and chats away.  We met Al and Bobbie who are on their 14th trip to Alaska.  They gave some excellent advice on where I can take Brian to fish.</p>
+<p>June 20 &#8211; Next we stayed at Evergreen Campground in Havre, MT.  This was our first time camping at someones home.  They had a few acres and turned it into a campground.  We loved staying under a large old tree.  Provided lots of shade for us while we sat outside.  We had full hook ups with 50 amp power.  It was a bit confusing to come up the shared driveway on the way into the campground so if you decide to camp here you need to keep an eye out for their signs.  Sadly, on the way to Havre we received a chip in the RV&#8217;s windshield. so we had to take a side trip to Great Falls to get it repaired. I think it&#8217;s good for an overnight mpground.  We were nestled within Glacier Park and had stunning views.  This was another level gravel site and we had full hookups with 50 amp power.  When we have 50 amps we get the chance to do laundry.  Otherwise we have to take turns between the washer or dryer running at the same time as the a/c.  We can&#8217;t do all three on 30 amps. This is an excellent destination campground to explore Glacier Park. We really wanted to at least see some of the park but I was so tired from going to Great Falls for the windshield repair that we stayed in instead.  This KOA offers dinner &amp; breakfast cooked down by their pool.  You also could get some &#8220;handmade&#8221; pizza delivered to your campsite.   The pizza was made to order but the dough was not homemade.  Still I didn&#8217;t have to cook so I was happy.  Sean can attest to how delicious their all you can eat pancakes are.  I wish I had known how huge they were before Nana and I both ordered some.  We easily could have shared a stack of thr424-150x150.jpg" alt="20140622_081424" width="150" height="150" /></a>June 22 &amp; 23 &#8211; We find ourselves at Spring Creek RV Campground in Canmore, AB.  This is one confusing place to find.  I knew to keep a lookout for the sign and still missed it.  GPS took us into downtown.  Luckily we were able to get out of there fairly quickly but it was nerve wracking.  This campground is surrounded by mountains and is a short walk to downtown.  There is a train that goes by but if you have a/c on, you won&#8217;t notice it.  The staff were friendly to me, but my mom found the person at the front more interested in watching their movie than helping her.  I can tell you that if you eat at the Grizzly Paw in Canmore, that the bison burger is good as are the regular burgers.  They have their own microbrewery there as well.  We stayed two days at this campground.  Our second day we drove into Banff National Forest.</p>
+<div id="attachment_401" style="width: 160px" class="wp-caption alignleft"><a href="httn-attachment-401" class="wp-caption-text">Banff, AB</p></div>
+<p>Banff contains Lake Louise and you can also drive through on the Icefields Parkway and take a walk on a glacier.  Lake Louise was pretty but it was windy and sprinkling so we didn&#8217;t stay long.  The drive down the Parkway was long but it was worth a chance to go on a Terrabus and check out a glacier.  Brian and Sean really enjoyed both the ride and drinking glacier water.  If you choose to do this, bring a water bottle and take some back with you.  If you have young teens, I recommend taking a trip out on the glacier.  We also did a skywalk which is a bit farther down from the glacier.  I really don&#8217;t think it was worth the money for us, but I can see how many people enjoy it.  One of the great things about Banff is the wildlife you might find.  We saw an elk, a black bear, three big horn sheep and a chipmunk.</p>
+<p>Can you believe I am still going on about this stuff?? Man, have we been out of communication with y&#8217;alld full hook ups.  It was a great stopping point as we traveled.  I do wish they had better trashcans at the campground.  I worried about animals getting into it. Most of the campgrounds in bear country have had better ones.</p>
+<p>June 25 &amp; 26 &#8211; Dave&#8217;s RV Park in Vanderhoof, BC is where we landed for today.  We are going to be here for 2 days as we desperately need to clean the rv and to do some laundry.  The showers are good but the design of the building was a bit odd but workable.  They have laundry (which we didn&#8217;t need) it is on a honor system and you pay the owners for how many loads you have done.  On the 26th we drove into Prince George which is an hour from Dave&#8217;s.  We visited Red Robin for dinner and Walmart for some supplies.  Sean has had a few surprises on this trip with several items tasting differently from home.  We had hoped that items from Walmart would be the same for him.  Some were and some weren&#8217;t.  I have learned to pack more of his (and Bri014/06/P1020791.jpg"><img aria-describedby="caption-attachment-403" decoding="async" loading="lazy" class="size-thumbnail wp-image-403" src="https://roadtrip.meenan.us/wp-content/uploads/2014/06/P1020791-150x150.jpg" alt="ksan" width="150" height="150" /></a><p id="caption-attachment-403" class="wp-caption-text">ksan</p></div>
+<p>June 27 &#8211; We arrived at &#8216;Ksan Villiage and Campground in Hazelton, BC.  There is a wicked bridge on the way to the campground.  Don&#8217;t forget to stop and take some pictures before you cross it.  It is one lane and everyone was pretty nice about taking turns.  They had pay showers which we didn&#8217;t use.  Sites 1-5 can get wifi, but we were in site 5 and it never worked for us.  I had to walk down to site 1 to send or receive emails.  We did manage to see two more black bears on the way to Hazelton but we were unable to get pictures as we didn&#8217;t want to slam on the RV&#8217;s breaks and possibly cause an accident.</p>
+<div id="attachment_404" style="wiune 28 &#8211; River Bear RV Park in Stewart, BC.  Late July and early August you will find a lot of bears here due to salmon.  We chose to come here early and miss the bears.  We mainly came here to drive down 37 and reach Hyder, AK.  The boys were excited to cross back into the USA even though it was for a brief visit.  We did see a bear today when we were in Hyder near their wharf.  We got all silly and started whispering &#8220;there&#8217;s a bear&#8221; as if it could hear us with the windows up.</p>
+<p>We are all excited about finally arriving to the main part of Alaska in 6 days.  We will see if we are able to do an update before then.  I will try to get pictures attached to this post when our wifi connects permit.</p>
+<p><!-- index.php -->
+<div
+	class="ngg-galleryoverview ngg-ajax-pagination-none"
+	id="ngg-gallery-663-1">
+
+    	<div class="slideshowlink">
+        <a href='https://roadtrip.meenan.us/index.php/nggallery/slideshow?p=376'>[Show as slideshow]</a>
+		
+	</div>
+			<!-- Thumbnails -->
+alleries.gallery_663 = {"ID":663,"post_password":"","menu_order":0,"display_settings":{"override_thumbnail_settings":"0","thumbnail_width":"100","thumbnail_height":"75","thumbnail_crop":"1","images_per_page":"20","number_of_columns":"0","ajax_pagination":"0","show_all_in_lightbox":"0","use_imagebrowser_effect":"0","show_piclens_link":"0","piclens_link_text":"[Show PicLens]","show_slideshow_link":"1","slideshow_link_text":"[Show as slideshow]","template":"","use_lightbox_effect":true,"display_no_images_error":1,"disable_pagination":0,"thumbnail_quality":"100","thumbnail_watermark":0,"ngg_triggers_display":"never","_errors":[],"display_view":"default"},"order_by":"sortorder","order_direction":"ASC","exclusions":[],"container_ids":[38,42,43,44,49],"excluded_container_ids":[],"sortorder":[],"entity_ids":[],"returns":"included","maximum_entity_count":500,"source":"galleries","display_type":"photocrati-nextgen_basic_thumbnails","slug":null,"id_field":"ID","__defaults_set":true};
+galleries.gallery_663.wordpress_pagean.us/?p=1752" title="12:45 AM" rel="bookmark"><time class="entry-date" datetime="2020-08-16T00:45:27-04:00" pubdate>August 16, 2020</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://roadtrip.meenan.us/?author=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>					</div>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		
+<p>Since we have been able to post due to horrible internet access. We are trying to keep up with posting and I need to grab my co-pilots phone to get more pictures as I haven&#8217;t been able to take many. </p>
+
+
+
+<p>We arrived to Orangeland RV Resort in Irvine. We were quite close to the Honda center so I am very happy that events weren&#8217;t scheduled. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" fetchpriority="high" width="1280" height="960" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6278.jpg" loading="eager" importance="high" alt="" class="wp-image-175abel>
+		<input type="text" class="field" name="s" id="s" placeholder="Search &hellip;" />
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search" />
+	</form>
+</aside>
+		<aside id="recent-posts-2" class="widget widget_recent_entries">
+		<h2 class="widget-title">Recent Posts</h2>
+		<ul>
+											<li>
+					<a href="https://roadtrip.meenan.us/?p=1752" aria-current="page">It&#8217;s been a long time&#8230;</a>
+									</li>
+											<li>
+					<a href="https://roadtrip.meenan.us/?p=1739">Finally</a>
+									</li>
+											<li>
+					<a href="https://roadtrip.meenan.us/?p=1735">Where the wind comes sweeping down the plains</a>
+									</li>
+											<li>
+					<a href="https://roadtrip.meenan.us/?p=1729">Is it deja Vu?</a>
+									</li>
+											<li>
+					<a href="https://roadtrip.meenan.us/?p=1724">Dollywood!!!</a>
+									</li>
+					</ul>
+
+		</aside><aside id="tag_cloud-2" class="widget widget_tag_cloud"><h2 class="widget-title">Tags</h2><div class="tagcloud"><a href="httpountdowntimer-3-dashboard').tminusCountDown({
+			targetDate: {
+				'day': 	15,
+				'month': 04,
+				'year': 2019,
+				'hour': 00,
+				'min': 	00,
+				'sec': 	00,
+				'localtime': '10/29/2024 12:34:46',
+			},
+			style: 'hoth',
+			launchtarget: 'countdown',
+			omitWeeks: 'false',
+			id: 'countdowntimer-3',
+			event_id: ''
+						});
+				});
+		</script>
+	
+</body>
+</html><!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Where the wind comes sweeping down the plains | Are we there yet?</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="pingback" href="https://roadtrip.meenan.us/xmlrpc.php" />
+<!--[if lt IE 9]>
+<script src="https://roadtrip.meenan.us/wp-content/themes/scrappy/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+<meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" titlrive today and arrived in Lake Eufaula which is a huge beautiful lake. We set up just in time. </p>
+
+
+
+<p>We had a severe thunderstorm watch happening and we are keeping an eye on the weather. I hope we are out of the storms for the night. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="960" height="1280" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6048.jpg" alt="" class="wp-image-1733" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6048.jpg 960w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6048-225x300.jpg 225w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6048-768x1024.jpg 768w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6048-113x150.jpg 113w" sizes="(max-width: 960px) 100vw, 960px" /></figure>
+
+
+
+<p>Max definitely enjoyed the shorter drive today and the extra cuddles he got on the drive. Good thing he isn’t afraid of storms as we had a lot of thunder. </p>
+
+
+
+<p>Tomorrow we go to Amarillo and I�/2020/08/img_6052-768x576.jpg 768w" sizes="(max-width: 1280px) 100vw, 1280px" /><figcaption>Max saying goodbye to Arkansas</figcaption></figure>
+
+
+
+<p></p>
+			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+			</footer><!-- .entry-meta -->
+</article><!-- #post-1735 -->
+
+					<nav role="navigation" id="nav-below" class="site-navigation post-navigation">
+		<h1 class="assistive-text">Post navigation</h1>
+
+	
+		<div class="nav-previous"><a href="https://roadtrip.meenan.us/?p=1729" rel="prev"><span class="meta-nav">&laquo;</span> Is it deja Vu?</a></div>		<div class="nav-next"><a href="https://roadtrip.meenan.us/?p=1739" rel="next">Finally <span class="meta-nav">&raquo;</span></a></div>
+	
+	</nav><!-- #nav-below -->
+	
+				
+			
+			</div><!-- #content -->
+		</div><!-- #primary .site-content -->
+
+		<div id="secondary" class="widget-area" role="complementary">
+						<aside id="countdowntimer-2" class="widget CountDownTimer"><h2 class="widget-title">Until Next Trip</h2><div id="countdowntimer-2-countdown" clarest_route=%2Foembed%2F1.0%2Fembed&#038;url=https%3A%2F%2Froadtrip.meenan.us%2F%3Fp%3D1729" />
+<link rel="alternate" type="text/xml+oembed" href="https://roadtrip.meenan.us/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=https%3A%2F%2Froadtrip.meenan.us%2F%3Fp%3D1729&#038;format=xml" />
+			<style type="text/css">
+				.gllr_image_row {
+					clear: both;
+				}
+			</style>
+			<script type='text/javascript'>
+var tminusnow = '{"now":"10\/29\/2024 12:34:47"}';
+</script>		<style type="text/css">
+			.stripes { background-image: url('https://roadtrip.meenan.us/wp-content/themes/scrappy/img/stripes.gif'); }
+		</style>
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-image: url("https://roadtrip.meenan.us/wp-content/themes/scrappy/img/bg.gif"); background-position: left top; background-size: auto; background-repeat: repeat; background-attachment: scroll; }
+</style>
+	</head>
+
+<body class="post-template-default single single-post postid-1729 single-format-standard custom-backgroigh" width="953" height="1280" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6015.jpg" alt="" class="wp-image-1726" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6015.jpg 953w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6015-223x300.jpg 223w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6015-762x1024.jpg 762w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6015-112x150.jpg 112w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_6015-768x1032.jpg 768w" sizes="(max-width: 953px) 100vw, 953px" /></figure>
+
+
+
+<p>Everyone has a different view as to how a campground should be.  Some feel it should be closer to area attractions. Others want to feel secluded. I just want to feel safe, secure and not have to travel an hour from the main road to get there. Is this campground a bit older? Yep, but it isn’t anything some paint and stain wouldn’t fix. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1280" ip.meenan.us/?page_id=56">About</a></li>
+</ul></div>		</nav>
+	</header><!-- #masthead .site-header -->
+
+	<div id="main">
+		<div id="primary" class="site-content">
+			<div id="content" role="main">
+
+			
+				
+<article id="post-1724" class="post-1724 post type-post status-publish format-standard hentry category-uncategorized">
+	<header class="entry-header">
+		<div class="entry-meta">
+			<div class="post-date">
+				<span class="post-month">Aug</span>
+				<span class="post-day">4</span>
+				<span class="post-year">2020</span>
+			</div>
+					</div><!-- .entry-meta -->
+		<h1 class="entry-title">Dollywood!!!</h1>
+		<div class="media-posted-on">
+			Posted on <a href="https://roadtrip.meenan.us/?p=1724" title="8:51 PM" rel="bookmark"><time class="entry-date" datetime="2020-08-04T20:51:42-04:00" pubdate>August 4, 2020</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://roadtrip.meenan.us/?author=1" title="View all posts by klmeenan" rel="author">klmeenan</a></span></span>					figure>
+
+
+
+<p>The staff here are very welcoming and all wore masks and gloves. Our temperature was checked upon entrance. While 90% of the tourists wore masks about 10% left their noses out.  We still felt very safe as we stayed away from all the rides and just enjoyed our walk around the park. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="960" height="1280" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5957.jpg" alt="" class="wp-image-1721" srcset="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5957.jpg 960w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5957-225x300.jpg 225w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5957-768x1024.jpg 768w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5957-113x150.jpg 113w" sizes="(max-width: 960px) 100vw, 960px" /><figcaption>Replica of Dolly’s childhood home. </figcaption></figure>
+
+
+
+<p>We did enjoy a very southern lunch which we ate early to avoid as many people as po at the store with no contact. I also brought a bunch of games and crafts to keep the kids busy and away from others. </p>
+
+
+
+<p>While we won’t be visiting a ton of places, we will be driving within easy sight distance so the kids will be able to view the Grand Canyon, Yellowstone and Mt Rushmore. It will take us 2 weeks to return to Virginia and while I do have to hop out and pump gas we can semi quarantine while we travel. </p>
+
+
+
+<p>My great friend, Margie, is along for the ride and she has brought her dog Max (Dave’s youngest is going to be so excited to meet him). Max has his own Instagram page <a rel="noreferrer noopener" href="https://www.instagram.com/mad_max_adventure" target="_blank">Max_Mad_Adventure</a> so there will be quite a few pictures posted there. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" fetchpriority="high" width="1250" height="1280" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5908.jpg" alt="" class="wp-image-1711" srcset="https://roadt2020/08/img_5908-1000x1024.jpg 1000w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5908-146x150.jpg 146w, https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5908-768x786.jpg 768w" sizes="(max-width: 1250px) 100vw, 1250px" /><figcaption>Max all tuckered out </figcaption></figure>
+
+
+
+<p>Today was a long drive to Sevierville/Pigeon Forge TN. I was happy to see they still have the wooden go cart multi level track that I took the boys to back in 2014. This trip we stayed at a KOA which is quite packed and I needed several blocks to be level. It was really nice that they had express check in and came out to my vehicle and had someone in a golf cart take us to our spot. Since we are self contained I most likely won’t use the showers or laundry so I can’t let anyone know about those. </p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" width="1237" height="927" src="https://roadtrip.meenan.us/wp-content/uploads/2020/08/img_5902.jpg" alt="" class="wp-image-1712" srcset="httpsain">
+
+			
+				<header class="page-header">
+					<h1 class="page-title">
+						Monthly Archives: <span>October 2019</span>					</h1>
+									</header>
+				<hr />
+				
+								
+					
+<article id="post-1705" class="post-1705 post type-post status-publish format-standard hentry category-uncategorized">
+	<header class="entry-header">
+				<div class="entry-meta">
+			<div class="post-date">
+				<a href="https://roadtrip.meenan.us/?p=1705" rel="bookmark" title="Permanent Link to Oz.. here we come">
+				<span class="post-month">Oct</span>
+				<span class="post-day">23</span>
+				<span class="post-year">2019</span>
+				</a>
+			</div>
+		</div><!-- .entry-meta -->
+								<h1 class="entry-title"><a href="https://roadtrip.meenan.us/?p=1705" title="Permalink to Oz.. here we come" rel="bookmark">Oz.. here we come</a></h1>
+					<span class="media-posted-on">
+				Posted on <a href="https://roadtrip.meenan.us/?p=1705" title="3:18 PM" rel="bookmark"><time class="entry-date" datetime="2019-10-23T15:18:03-04:00" pubdate>Octoberpring so we are lucky and won&#8217;t have to switch seasonal clothes.  I do think I am the only one bringing a swimsuit.  We will only have Monday &#8211; Wednesday to sight see.  Pat&#8217;s conference is Thursday morning.  Thursday early evening we head to New Zealand.</p>
+
+
+
+<p>Friday we have a tour guide to see some sites around Auckland.  Saturday is the day we are really excited about.  We get to go see Hobbiton where LOTR (Lord of the Ring) and the Hobbit movies were filmed.  We are all excited to see it.  Well maybe not Brian.</p>
+
+
+
+<p>We are sad we will only have time to get a small taste of each country, but we have to get back for Sean&#8217;s school.  </p>
+
+
+
+<p></p>
+			</div><!-- .entry-content -->
+	
+	<footer class="entry-meta">
+					
+					
+		
+	</footer><!-- #entry-meta -->
+</article><!-- #post-1705 -->
+<hr />
+
+				
+					<nav role="navigation" id="nav-below" class="site-navigation paging-navigation">
+		<h1 class="assistive-text">Post navigation</h1>
+
+	
+	</nav><!-- #nav-below -->
+	
+			
+			</div>an></span>					</div>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		
+<p>We will soon be traveling to the land down under.  Pat has a conference in Sydney, Australia.  We won&#8217;t be there long as Sean has school and Brian has a job interview (fingers crossed).  </p>
+
+
+
+<p>The flight is very long so we decided to stop and visit my best friend in Abu Dhabi for one day before arriving in Sydney.  Her daughter, Bella, has her birthday on the 24th and mine is the 26th so we will have a small celebration.  Pat has never visited AD before and Sean hasn&#8217;t visited since he was 3.  Brian visited last year over spring break and we had time to see quite a bit.  This visit is going to be just to a local mall and then dinner with friends as  we only have Saturday to visit.  Sunday we head out for out last leg to Australia.</p>
+
+
+
+<p>We will arrive Monday very early to Sydney and will head to our AirBNB which is located North Bondi with beautiful beach views.  Our fall is their spring so we are l

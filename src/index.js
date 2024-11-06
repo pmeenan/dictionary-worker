@@ -7,34 +7,75 @@ import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
 //import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
 //import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
 
+const expire_days = 7; // Default dictionary expiration (can be overriden with "expire-days")
+
+// List of dictionaries that need to be loaded with "Link rel=compression-dictionary"
+// These can either be "asset" file paths under the "assets" directory or
+// "url" pointing to a path to fetch the dictionary.
+const dynamic_dictionaries = {
+  "roadtrip": {
+    "asset": "/roadtrip.dat",
+    "match": "/*",
+    "match-dest": ["document", "frame"],
+    "expire-days": 30
+  }
+}
+
+// List of URL patterns for static resources for delta-encoding version updates
+// where the new version of a file will match the same pattern.
+// The dictionary ID will be set as the original URL for the dictionary.
+// An optional "match-dest" param can restrict the dictionary to a specific destination.
+const static_dictionaries = {
+  "script": [
+    "/wp-includes/js/jquery/jquery.min.js?ver=*",
+    "/wp-includes/js/jquery/jquery-migrate.min.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick-*-modded.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/ajax/static/ajax.min.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/ngg_basic_slideshow.js?ver=*",
+    "*/fontawesome/js/*-shims.min.js?ver=*",
+    "/wp-content/plugins/jquery-t-countdown-widget/js/jquery.t-countdown.js?ver=*",
+    "/wp-content/themes/scrappy/js/small-menu.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/common.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/lightbox_context.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/shutter.js?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/nextgen_shutter.js?ver=*",
+    "*/fontawesome/js/all.min.js?ver=*",
+  ],
+  "style": [
+    "/wp-includes/css/dist/block-library/style.min.css?ver=*",
+    "/wp-content/plugins/social-media-widget/social_widget.css?ver=*",
+    "/wp-content/themes/scrappy/style.css?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/ngg_basic_slideshow.css?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick.css?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick-theme.css?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/trigger_buttons.css?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/shutter.css?ver=*",
+    "*/fontawesome/css/*-shims.min.css?ver=*",
+    "*/fontawesome/css/all.min.css?ver=*",
+    "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/widget/static/widgets.css?ver=*",
+    "/wp-includes/css/dashicons.min.css?ver=*",
+    "/wp-content/plugins/gallery-plugin/css/frontend_style.css?ver=*",
+    "*/fancybox/jquery.fancybox.min.css?ver=*",
+    "/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=*",
+  ]
+}
+
 // File name of the current dictionary asset (TODO: see if there is a way to get this dynamically)
 const currentDictionary = "HWl0A6pNEHO4AeCdArQj53JlvZKN8Fcwk3JcGv3tak8";
 
 // Psuedo-path where the dictionaries will be served from (shouldn't collide with a real directory)
 const dictionaryPath = "/dictionary/";
 
-// Dictionary options
-const match = 'match="/*", match-dest=("document" "frame")'; // Match pattern for the URLs to be compressed
-const dictionaryExpiration = 30 * 24 * 3600;                 // 30 day expiration on the dictionary itself
-
 // Compression options
-const blocking = true;   // Block requests until wasm and the dictionary have loaded
 const compressionLevel = 10;
 const compressionWindowLog = 20;  // Compression window should be at least as long as the dictionary + typical response - 2 ^ 20 = 1MB
 
 // Internal globals for managing state while waiting for the dictionary and zstd wasm to load
 let zstd = null;
 let brotli = null;
-let dictionaryLoaded = null;
 let wasmLoaded = null;
-let initialized = false;
-let dictionary = null;
-let dictionarySize = 0;
-let dictionaryJS = null;
-const currentHash = atob(currentDictionary.replaceAll('-', '+').replaceAll('_', '/'));
 const dictionaryPathname = dictionaryPath + currentDictionary + '.dat';
-const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...Uint8Array.from(currentHash, c => c.charCodeAt(0))]);
-const dcbHeader = new Uint8Array([0xff, 0x44, 0x43, 0x42, ...Uint8Array.from(currentHash, c => c.charCodeAt(0))]);
+let dictionaries = {};  // in-memory dictionaries, indexed by ID
 
 export default {
 
@@ -54,50 +95,67 @@ export default {
     if (isDictionary) {
       return await fetchDictionary(env, url);
     } else {
+      const headers = []; // List of headers that need to be added to the response (use-as-dictionary and link)
+
+      addLinkHeaders(request, headers);
+      addDictionaryHeaders(request, headers);
+
       const dest = request.headers.get("sec-fetch-dest");
       if (dest && (dest.indexOf("document") !== -1 || dest.indexOf("frame") !== -1)) {
-        if (request.headers.get("available-dictionary")) {
+        if (request.headers.get("available-dictionary") && request.headers.get("dictionary-id")) {
           // Trigger the async dictionary load
-          dictionaryInit(request, env, ctx).catch(E => console.log(E));
-          zstdInit(ctx).catch(E => console.log(E));
-          brotliInit(ctx).catch(E => console.log(E));
+          const dictionaryPromise = loadDictionary(request, ctx).catch(E => console.log(E));
 
           // Fetch the actual content
           const original = await fetch(request);
 
-          // block on the dictionary/wasm init if necessary
-          if (blocking) {
-            if (zstd === null && brotli === null) { await wasmLoaded; }
-            if (dictionary === null) { await dictionaryLoaded; }
-          }
-          
-          if (original.ok && supportsCompression(request)) {
-            return await compressResponse(original, ctx);
+          // Wait for the dictionary to finish loading
+          const dictionary = await dictionaryPromise;
+
+          if (original.ok && dictionary !== null) {
+            return await compressResponse(original, dictionary, headers, ctx);
           } else {
-            return original;
+            return addHeaders(original, headers);
           }
         } else {
-          // Just add the link header
-          const response = new Response(original.body, original);
-          response.headers.append("Link", '<' + dictionaryPathname + '>; rel="compression-dictionary"',);
-          return response;
+          const original = await fetch(request);
+          return addHeaders(original, headers);
         }
       } else {
-        return await fetch(request);
+        const original = await fetch(request);
+        return addHeaders(original, headers);
       }
     }
   }
 }
 
+function addHeaders(original, headers) {
+  const response = new Response(original.body, original);
+  for (const header of headers) {
+    response.headers.append(header[0], header[1]);
+  }
+  return response;
+}
+
+// Add the Link headers for all dynamic_dictionaries to any document or frame requests
+function addLinkHeaders(request, headers) {
+  headers.append(["Link", '<' + dictionaryPathname + '>; rel="compression-dictionary"']);
+}
+
+// Add the Use-As-Dictionary for any matching static_dictionaries
+function addDictionaryHeaders(request, headers) {
+
+}
+
 /*
   Dictionary-compress the response
 */
-async function compressResponse(original, ctx) {
+async function compressResponse(original, dictionary, headers, ctx) {
   const { readable, writable } = new TransformStream();
   if (zstd !== null) {
-    ctx.waitUntil(compressStreamZstd(original.body, writable));
+    ctx.waitUntil(compressStreamZstd(original.body, writable, dictionary));
   } else if (brotli !== null) {
-    ctx.waitUntil(compressStreamBrotli(original.body, writable));
+    ctx.waitUntil(compressStreamBrotli(original.body, writable, dictionary));
   }
 
   // Add the appropriate headers
@@ -114,10 +172,13 @@ async function compressResponse(original, ctx) {
     response.encodeBody = "manual";
   }
   response.headers.set("Vary", 'Accept-Encoding, Available-Dictionary',);
+  for (const header of headers) {
+    response.headers.append(header[0], header[1]);
+  }
   return response;
 }
 
-async function compressStreamZstd(readable, writable) {
+async function compressStreamZstd(readable, writable, dictionary) {
   const reader = readable.getReader();
   const writer = writable.getWriter();
 
@@ -139,13 +200,14 @@ async function compressStreamZstd(readable, writable) {
       zstd.CCtx_setParameter(cctx, zstd.cParameter.c_compressionLevel, compressionLevel);
       zstd.CCtx_setParameter(cctx, zstd.cParameter.c_windowLog, compressionWindowLog );
       
-      zstd.CCtx_refCDict(cctx, dictionary);
+      zstd.CCtx_refCDict(cctx, dictionary.dictionary);
     }
   } catch (E) {
     console.log(E);
   }
 
   // write the dcz header
+  const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...dictionary.hash]);
   await writer.write(dczHeader);
   
   let isFirstChunk = true;
@@ -222,7 +284,7 @@ async function compressStreamZstd(readable, writable) {
 
 // The current brotli sample below doesn't handle streaming incremental chunks
 // (it will flush whenever the encoder decides to)
-async function compressStreamBrotli(readable, writable) {
+async function compressStreamBrotli(readable, writable, dictionary) {
   const reader = readable.getReader();
   const writer = writable.getWriter();
 
@@ -242,13 +304,14 @@ async function compressStreamBrotli(readable, writable) {
       brotli.SetParameter(state, brotli.Parameter.QUALITY, compressionLevel);
       brotli.SetParameter(state, brotli.Parameter.LGWIN, compressionWindowLog);
       
-      brotli.AttachPreparedDictionary(state, dictionary);
+      brotli.AttachPreparedDictionary(state, dictionary.dictionary);
     }
   } catch (E) {
     console.log(E);
   }
   
   // write the dcb header
+  const dcbHeader = new Uint8Array([0xff, 0x44, 0x43, 0x42, ...dictionary.hash]);
   await writer.write(dcbHeader);
   
   while (true) {
@@ -324,44 +387,81 @@ async function fetchDictionary(env, url) {
 }
 
 /*
- See if the client advertized a matching dictionary and the appropriate encoding
+  Initialize wasm and load the matching dictionary in parallel
 */
-function supportsCompression(request) {
-  let hasDictionary = false;
-  const availableDictionary = request.headers.get("available-dictionary");
-  if (availableDictionary && dictionary !== null) {
-    const availableHash = atob(availableDictionary.trim().replaceAll(':', ''));
-    if (availableHash == currentHash) {
-      hasDictionary = true;
+async function loadDictionary(request, ctx) {
+  let dictionary = null;
+  const availableDictionary = request.headers.get("available-dictionary").trim().replaceAll(':', '')
+  const hash = Uint8Array.fromBase64(availableDictionary);
+  const id = request.headers.get("dictionary-id");
+
+  // Initialize wasm
+  let loadingWasm = false;
+  if (brotli === null && zstd === null) {
+    loadingWasm = true;
+    zstdInit(ctx).catch(E => console.log(E));
+    brotliInit(ctx).catch(E => console.log(E));
+  }
+
+  // Fetch the dictionary if we don't already have it
+  if (!(id in dictionaries)) {
+    // The ID will either be an absolute path starting with / or a key from dynamic_dictionaries
+    let response = null;
+    let dictionaryURL = null;
+    let dictionaryAsset = null;
+    if (!id.startsWith("/")) {
+      if (id in dynamic_dictionaries) {
+        if ("asset" in dynamic_dictionaries[id]) {
+          dictionaryAsset = dynamic_dictionaries[id].asset;
+        } else if ("url" in dynamic_dictionaries[id]) {
+          dictionaryURL = dynamic_dictionaries[id].url;
+        }
+      }
+    } else {
+      dictionaryURL = new URL(request.url);
+      dictionaryURL.pathname = id;
+    }
+
+    if (dictionaryAsset !== null) {
+      const url = new URL(request.url);
+      url.pathname = '/' + currentDictionary + '.dat';
+      response = await env.ASSETS.fetch(url);
+    } else if (dictionaryURL !== null) {
+      response = await fetch(dictionaryURL, request);
+    }
+
+    if (response !== null && response.ok) {
+      const bytes = await response.bytes();
+      if (loadingWasm && wasmLoaded !== null) {
+        await wasmLoaded;
+        loadingWasm = false;
+      }
+      // Get the hash of the dictionary and store it in encoder-specific format
+      const hash = await crypto.subtle.digest({name: 'SHA-256'}, bytes);
+      const raw = prepareDictionary(bytes);
+      dictionaries[id] = {
+        "hash": new Uint8Array(hash),
+        "dictionary": raw
+      };
     }
   }
+
+  // wait for wasm to finish
+  if (loadingWasm && wasmLoaded !== null) {
+    await wasmLoaded;
+  }
+
   const supportsDCZ = request.cf.clientAcceptEncoding.indexOf("dcz") !== -1 && zstd !== null;
   const supportsDCB = request.cf.clientAcceptEncoding.indexOf("dcb") !== -1 && brotli !== null;
-  return hasDictionary && (supportsDCZ || supportsDCB);
-}
-
-/*
-  Make sure the dictionary is loaded and cached into the isolate global.
-  The current implementation blocks all requests until the dictionary has been loaded.
-  This can be modified to fail fast and only use dictionaries after they have loaded.
- */
-async function dictionaryInit(request, env, ctx) {
-  if (dictionaryJS === null && dictionaryLoaded === null) {
-    let resolve;
-    dictionaryLoaded = new Promise((res, rej) => {
-      resolve = res;
-    });
-    // Keep the request alive until the dictionary loads
-    ctx.waitUntil(dictionaryLoaded);
-    const url = new URL(request.url);
-    url.pathname = '/' + currentDictionary + '.dat';
-    const response = await env.ASSETS.fetch(url);
-    if (response.ok) {
-      dictionaryJS = await response.bytes();
-    }
-    postInit();
-    resolve(true);
+  if ((supportsDCZ || supportsDCB) && id in dictionaries && "hash" in dictionaries[id] && dictionaries[id].hash == hash) {
+    dictionary = dictionaries[id];
+  } else {
+    console.log("Dictionary mismatch");
   }
+
+  // see if we have a dictionary that matches what the client has
+  dictionaryInit(request, env, ctx).catch(E => console.log(E));
+  return dictionary;
 }
 
 // wasm setup
@@ -383,7 +483,6 @@ async function zstdInit(ctx) {
         return path
       },
     }).catch(E => console.log(E));
-    postInit();
     resolve(true);
   }
 }
@@ -406,37 +505,28 @@ async function brotliInit(ctx) {
         return path
       },
     }).catch(E => console.log(E));
-    postInit();
     resolve(true);
   }
 }
 
-// After both the dictionary and wasm have initialized, prepare the dictionary into zstd
-// memory so it can be reused efficiently.
-function postInit() {
-  if (!initialized && dictionaryJS !== null) {
-    if (zstd !== null) {
-      try {
-        let d = zstd._malloc(dictionaryJS.byteLength)
-        dictionarySize = dictionaryJS.byteLength;
-        zstd.HEAPU8.set(dictionaryJS, d);
-        dictionaryJS = null;
-        dictionary = zstd.createCDict_byReference(d, dictionarySize, compressionLevel);
-        initialized = true;
-      } catch (E) {
-        console.log(E);
-      }
-    } else if (brotli !== null) {
-      try {
-        let d = brotli._malloc(dictionaryJS.byteLength)
-        dictionarySize = dictionaryJS.byteLength;
-        brotli.HEAPU8.set(dictionaryJS, d);
-        dictionaryJS = null;
-        dictionary = brotli.PrepareDictionary(brotli.SharedDictionaryType.Raw, dictionarySize, d, compressionLevel);
-        initialized = true;
-      } catch (E) {
-        console.log(E);
+function prepareDictionary(bytes) {
+  let prepared = null;
+  try {
+    if (bytes !== null) {
+      if (zstd !== null) {
+        const d = zstd._malloc(bytes.byteLength)
+        zstd.HEAPU8.set(bytes, d);
+        prepared = zstd.createCDict(d, bytes.byteLength, compressionLevel);
+        zstd._free(d);
+      } else if (brotli !== null) {
+        const d = brotli._malloc(bytes.byteLength)
+        brotli.HEAPU8.set(bytes, d);
+        prepared = brotli.PrepareDictionary(brotli.SharedDictionaryType.Raw, bytes.byteLength, d, compressionLevel);
+        brotli._free(d);
       }
     }
+  } catch (E) {
+    console.log(E);
   }
+  return prepared;
 }
