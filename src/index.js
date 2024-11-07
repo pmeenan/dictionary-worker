@@ -138,9 +138,6 @@ export default {
           return addHeaders(original, headers);
         }
       } else {
-        console.log("destination mismatch");
-        console.log(dest);
-        console.log(targetDestinations);
         const original = await fetch(request);
         return addHeaders(original, headers);
       }
@@ -643,6 +640,9 @@ function getBuffer() {
   let buffer = buffers.pop();
   if (!buffer && wasm !== null) {
     buffer = wasm._malloc(bufferSize);
+  }
+  if (!buffer) {
+    console.log("Error allocating buffer");
   }
   return buffer
 }
