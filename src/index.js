@@ -3,11 +3,13 @@
 // Zstd - ~100k compressed
 import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
 import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
-// Brotli - ~900k compressed
-//import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
-//import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
 
-const expire_days = 7; // Default dictionary expiration (can be overriden with "expire-days")
+/* Brotli - ~900k compressed
+import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
+import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
+*/
+
+const expire_days = 7; // Default dictionary expiration (can be overriden per-dictionary with "expire-days")
 
 // List of dictionaries that need to be loaded with "Link rel=compression-dictionary"
 // These can either be "asset" file paths under the "assets" directory or
@@ -32,14 +34,14 @@ const static_dictionaries = {
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick-*-modded.js?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/ajax/static/ajax.min.js?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/ngg_basic_slideshow.js?ver=*",
-    "*/fontawesome/js/*-shims.min.js?ver=*",
+    "/*/fontawesome/js/*-shims.min.js?ver=*",
     "/wp-content/plugins/jquery-t-countdown-widget/js/jquery.t-countdown.js?ver=*",
     "/wp-content/themes/scrappy/js/small-menu.js?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/common.js?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/lightbox_context.js?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/shutter.js?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/nextgen_shutter.js?ver=*",
-    "*/fontawesome/js/all.min.js?ver=*",
+    "/*/fontawesome/js/all.min.js?ver=*",
   ],
   "style": [
     "/wp-includes/css/dist/block-library/style.min.css?ver=*",
@@ -50,78 +52,91 @@ const static_dictionaries = {
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_basic_gallery/static/slideshow/slick/slick-theme.css?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/nextgen_gallery_display/static/trigger_buttons.css?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/lightbox/static/shutter/shutter.css?ver=*",
-    "*/fontawesome/css/*-shims.min.css?ver=*",
-    "*/fontawesome/css/all.min.css?ver=*",
+    "/*/fontawesome/css/*-shims.min.css?ver=*",
+    "/*/fontawesome/css/all.min.css?ver=*",
     "/wp-content/plugins/nextgen-gallery/products/photocrati_nextgen/modules/widget/static/widgets.css?ver=*",
     "/wp-includes/css/dashicons.min.css?ver=*",
     "/wp-content/plugins/gallery-plugin/css/frontend_style.css?ver=*",
-    "*/fancybox/jquery.fancybox.min.css?ver=*",
+    "/*/fancybox/jquery.fancybox.min.css?ver=*",
     "/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=*",
   ]
 }
-
-// File name of the current dictionary asset (TODO: see if there is a way to get this dynamically)
-const currentDictionary = "HWl0A6pNEHO4AeCdArQj53JlvZKN8Fcwk3JcGv3tak8";
 
 // Psuedo-path where the dictionaries will be served from (shouldn't collide with a real directory)
 const dictionaryPath = "/dictionary/";
 
 // Compression options
-const compressionLevel = 10;
+const compressionLevel = 10;      // 1-19 for ZStandard, 5-11 for Brotli
 const compressionWindowLog = 20;  // Compression window should be at least as long as the dictionary + typical response - 2 ^ 20 = 1MB
 
 // Internal globals for managing state while waiting for the dictionary and zstd wasm to load
 let zstd = null;
 let brotli = null;
 let wasmLoaded = null;
-const dictionaryPathname = dictionaryPath + currentDictionary + '.dat';
 let dictionaries = {};  // in-memory dictionaries, indexed by ID
 
 export default {
-
   /*
     Main entrypoint.
-    - If a fetch comes in for /dictionary/<hash>.dat, return the in-memory dictionary with an appropriate Use-As-Dictionary header.
-    - If a fetch comes in with "Sec-Fetch-Dest: document" or 'frame':
-      * Pass-through the fetch to get the original response.
-      * Add a <link> header to trigger the dictionary fetch.
-      * If the request has an "Available-Dictionary" request header that matches the current dictionary then dictionary-compress the response.
-    - Otherwise, pass the fetch through to the origin.
+    - If a fetch comes in with "Sec-Fetch-Dest: document" or 'frame', Add a <link> header to trigger the dictionary fetch.
+    - If a fetch comes in for /dictionary/<id>, return the dictionary with an appropriate Use-As-Dictionary header.
+    - If a fetch comes in matching a known static pattern, add an appropriate Use-As-Dictionary header.
+    - Pass-through the fetch to get the original response.
+    - If the request has an "Available-Dictionary" request header that matches a known dictionary ID then dictionary-compress the response.
+    - Otherwise, return the original response.
   */
   async fetch(request, env, ctx) {
     // Handle the request for the dictionary itself
     const url = new URL(request.url);
-    const isDictionary = url.pathname == dictionaryPathname;
+    const isDictionary = url.pathname.startsWith(dictionaryPath);
     if (isDictionary) {
-      return await fetchDictionary(env, url);
+      return await fetchDictionary(env, request);
     } else {
-      const headers = []; // List of headers that need to be added to the response (use-as-dictionary and link)
+      // List of headers that need to be added to the response
+      const headers = [];
+      const dest = request.headers.get("sec-fetch-dest");
+      const targetDestinations = ['document', 'frame', ...Object.keys(static_dictionaries)];
 
       addLinkHeaders(request, headers);
-      addDictionaryHeaders(request, headers);
+      addDictionaryHeader(request, headers);
 
-      const dest = request.headers.get("sec-fetch-dest");
-      if (dest && (dest.indexOf("document") !== -1 || dest.indexOf("frame") !== -1)) {
+      if (dest && targetDestinations.includes(dest)) {
+        headers.push(["Vary", "Available-Dictionary"]);
         if (request.headers.get("available-dictionary") && request.headers.get("dictionary-id")) {
-          // Trigger the async dictionary load
-          const dictionaryPromise = loadDictionary(request, ctx).catch(E => console.log(E));
-
-          // Fetch the actual content
-          const original = await fetch(request);
-
-          // Wait for the dictionary to finish loading
-          const dictionary = await dictionaryPromise;
-
-          if (original.ok && dictionary !== null) {
-            return await compressResponse(original, dictionary, headers, ctx);
+          const cacheKey = url + " " + request.headers.get("available-dictionary");
+          //const cache = caches.default;
+          //const cached = await cache.match(cacheKey);
+          const cached = false;
+          if (cached) {
+            const response = new Response(cached.body, cached);
+            response.headers.append("x-Dictionary", "cached");
+            return response;
           } else {
-            return addHeaders(original, headers);
+            // Trigger the async dictionary load
+            const dictionaryPromise = loadDictionary(request, env, ctx).catch(E => console.log(E));
+
+            // Fetch the actual content
+            const original = await fetch(request);
+
+            // Wait for the dictionary to finish loading
+            const dictionary = await dictionaryPromise;
+
+            if (original.ok && dictionary !== null) {
+              const response = await compressResponse(original, dictionary, headers, ctx);
+              //ctx.waitUntil(cache.put(cacheKey, response.clone()));
+              return response;
+            } else {
+              return addHeaders(original, headers);
+            }
           }
         } else {
           const original = await fetch(request);
           return addHeaders(original, headers);
         }
       } else {
+        console.log("destination mismatch");
+        console.log(dest);
+        console.log(targetDestinations);
         const original = await fetch(request);
         return addHeaders(original, headers);
       }
@@ -139,12 +154,26 @@ function addHeaders(original, headers) {
 
 // Add the Link headers for all dynamic_dictionaries to any document or frame requests
 function addLinkHeaders(request, headers) {
-  headers.append(["Link", '<' + dictionaryPathname + '>; rel="compression-dictionary"']);
+  // TODO: don't send the link header if the client already has a dictionary (maybe)
+  const dest = request.headers.get("sec-fetch-dest");
+  if (dest && ["document", "frame"].includes(dest)) {
+    for (const id in dynamic_dictionaries) {
+      headers.push(["Link", '<' + dictionaryPath + id + '>; rel="compression-dictionary"']);
+    }
+  }
 }
 
 // Add the Use-As-Dictionary for any matching static_dictionaries
-function addDictionaryHeaders(request, headers) {
-
+function addDictionaryHeader(request, headers) {
+  const url = new URL(request.url);
+  const dest = request.headers.get("sec-fetch-dest");
+  let match = findMatch(url, dest);
+  if (match !== null) {
+    const id = '"' + url.pathname + url.search + '"';
+    match = '"' + match + '"';
+    const matchDest = '("' + dest + '")';
+    headers.push(["Use-As-Dictionary", 'id=' + id + ', match=' + match + ', match-dest=' + matchDest]);
+  }
 }
 
 /*
@@ -171,7 +200,6 @@ async function compressResponse(original, dictionary, headers, ctx) {
     response.headers.set("Content-Encoding", 'dcb',);
     response.encodeBody = "manual";
   }
-  response.headers.set("Vary", 'Accept-Encoding, Available-Dictionary',);
   for (const header of headers) {
     response.headers.append(header[0], header[1]);
   }
@@ -209,6 +237,8 @@ async function compressStreamZstd(readable, writable, dictionary) {
   // write the dcz header
   const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...dictionary.hash]);
   await writer.write(dczHeader);
+  console.log("Wrote dcz header");
+  console.log(dczHeader);
   
   let isFirstChunk = true;
   let chunksGathered = 0;
@@ -258,6 +288,8 @@ async function compressStreamZstd(readable, writable, dictionary) {
 
           // Keep track of the number of chunks processed where we didn't send any response.
           if (outBuffer.pos == 0) chunksGathered++;
+
+          console.log("Chunk: " + chunkSize +", out: " + outBuffer.pos);
 
           if (outBuffer.pos > 0) {
             const data = new Uint8Array(zstd.HEAPU8.buffer, outBuffer.dst, outBuffer.pos);
@@ -373,27 +405,71 @@ async function compressStreamBrotli(readable, writable, dictionary) {
 /*
  Handle the client request for a dictionary
 */
-async function fetchDictionary(env, url) {
-  // Just pass the request through to the assets fetch
-  url.pathname = '/' + currentDictionary + '.dat';
-  let asset = await env.ASSETS.fetch(url);
-  return new Response(asset.body, {
-    headers: {
-      "content-type": "text/plain; charset=UTF-8",  /* Can be anything but text/plain will allow for Cloudflare to apply compression */
-      "cache-control": "public, max-age=" + dictionaryExpiration,
-      "use-as-dictionary": match
+async function fetchDictionary(env, request) {
+  const url = new URL(request.url);
+  const id = url.pathname.slice(dictionaryPath.length).replace(/\/+$/, "").replace(/^\/+/, "");
+  if (id in dynamic_dictionaries && "match" in dynamic_dictionaries[id]) {
+    const info = dynamic_dictionaries[id];
+    let expires = "expire-days" in info ? info["expire-days"] : expire_days;
+    expires = expires * 24 * 60 * 60;
+    let response = null;
+    if ("asset" in info) {
+      const assetUrl = new URL(info.asset, url);
+      response = await env.ASSETS.fetch(assetUrl);
+    } else if ("url" in info) {
+      response = await fetch(info.url, request);
     }
-  });
+    if (response !== null) {
+      let match = 'id="' + id + '", match="' + info["match"] + '"';
+      if ("match-dest" in info && info["match-dest"].length) {
+        let m = '(';
+        for (const dest of info["match-dest"]) {
+          if (m.length > 2)
+            m += " ";
+          m += '"' + dest + '"';
+        }
+        m += ')';
+        match += ', match-dest=' + m;
+      }
+      return new Response(response.body, {
+        headers: {
+          "content-type": "text/plain; charset=UTF-8",  /* Can be anything but text/plain will allow for Cloudflare to apply compression */
+          "cache-control": "public, max-age=" + expires,
+          "use-as-dictionary": match
+        }
+      });
+    } else {
+      return await fetch(request);
+    }
+  } else {
+    console.log("Matching dictionary not found");
+    return await fetch(request);
+  }
+}
+
+/*
+  See if there is a match path in static_dictionaries that matches the given url
+*/
+function findMatch(url, dest) {
+  if (dest in static_dictionaries) {
+    for (const pattern of static_dictionaries[dest]) {
+      const urlPattern = new URLPattern(pattern, url);
+      if (urlPattern.test(url)) {
+        return pattern;
+      }
+    }
+  }
+  return null;
 }
 
 /*
   Initialize wasm and load the matching dictionary in parallel
 */
-async function loadDictionary(request, ctx) {
+async function loadDictionary(request, env, ctx) {
   let dictionary = null;
   const availableDictionary = request.headers.get("available-dictionary").trim().replaceAll(':', '')
-  const hash = Uint8Array.fromBase64(availableDictionary);
-  const id = request.headers.get("dictionary-id");
+  const hash = base64ToUint8Array(availableDictionary);
+  const id = request.headers.get("dictionary-id").trim().replaceAll('"', '');
 
   // Initialize wasm
   let loadingWasm = false;
@@ -418,16 +494,18 @@ async function loadDictionary(request, ctx) {
         }
       }
     } else {
-      dictionaryURL = new URL(request.url);
-      dictionaryURL.pathname = id;
+      dictionaryURL = new URL(id, request.url);
+      const match = findMatch(dictionaryURL, request.headers.get("sec-fetch-dest"));
+      if (match === null) {
+        dictionaryURL = null;
+      }
     }
 
     if (dictionaryAsset !== null) {
-      const url = new URL(request.url);
-      url.pathname = '/' + currentDictionary + '.dat';
+      const url = new URL(dictionaryAsset, request.url);
       response = await env.ASSETS.fetch(url);
     } else if (dictionaryURL !== null) {
-      response = await fetch(dictionaryURL, request);
+      response = await fetch(dictionaryURL);
     }
 
     if (response !== null && response.ok) {
@@ -437,10 +515,10 @@ async function loadDictionary(request, ctx) {
         loadingWasm = false;
       }
       // Get the hash of the dictionary and store it in encoder-specific format
-      const hash = await crypto.subtle.digest({name: 'SHA-256'}, bytes);
+      const dictionaryHash = await crypto.subtle.digest({name: 'SHA-256'}, bytes);
       const raw = prepareDictionary(bytes);
       dictionaries[id] = {
-        "hash": new Uint8Array(hash),
+        "hash": new Uint8Array(dictionaryHash),
         "dictionary": raw
       };
     }
@@ -453,14 +531,20 @@ async function loadDictionary(request, ctx) {
 
   const supportsDCZ = request.cf.clientAcceptEncoding.indexOf("dcz") !== -1 && zstd !== null;
   const supportsDCB = request.cf.clientAcceptEncoding.indexOf("dcb") !== -1 && brotli !== null;
-  if ((supportsDCZ || supportsDCB) && id in dictionaries && "hash" in dictionaries[id] && dictionaries[id].hash == hash) {
+  if ((supportsDCZ || supportsDCB) && id in dictionaries && "hash" in dictionaries[id] && areUint8ArraysEqual(dictionaries[id]["hash"], hash)) {
     dictionary = dictionaries[id];
   } else {
     console.log("Dictionary mismatch");
+    if (!supportsDCZ) console.log("Does not support dcz");
+    if (!(id in dictionaries)) {
+      console,log("Dictionary " + id + " not found")
+    } else if (!areUint8ArraysEqual(dictionaries[id]["hash"], hash)) {
+      console.log("Hash mismatch");
+      console.log(dictionaries[id].hash);
+      console.log(hash);
+    }
   }
 
-  // see if we have a dictionary that matches what the client has
-  dictionaryInit(request, env, ctx).catch(E => console.log(E));
   return dictionary;
 }
 
@@ -529,4 +613,29 @@ function prepareDictionary(bytes) {
     console.log(E);
   }
   return prepared;
+}
+
+function base64ToUint8Array(base64String) {
+  const decodedString = atob(base64String);
+  const uint8Array = new Uint8Array(decodedString.length);
+
+  for (let i = 0; i < decodedString.length; i++) {
+    uint8Array[i] = decodedString.charCodeAt(i);
+  }
+
+  return uint8Array;
+}
+
+function areUint8ArraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
