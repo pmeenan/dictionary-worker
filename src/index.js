@@ -27,7 +27,7 @@ const dynamic_dictionaries = {
 // where the new version of a file will match the same pattern.
 // The dictionary ID will be set as the original URL for the dictionary.
 // An optional "match-dest" param can restrict the dictionary to a specific destination.
-const static_dictionaries = {
+let static_dictionaries = {
   "script": [
     "/wp-includes/js/jquery/jquery.min.js?ver=*",
     "/wp-includes/js/jquery/jquery-migrate.min.js?ver=*",
@@ -61,6 +61,7 @@ const static_dictionaries = {
     "/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=*",
   ]
 }
+static_dictionaries = {}
 
 // Psuedo-path where the dictionaries will be served from (shouldn't collide with a real directory)
 const dictionaryPath = "/dictionary/";
@@ -528,9 +529,13 @@ async function loadDictionary(request, env, ctx) {
   if (loadingWasm && wasmLoaded !== null) {
     await wasmLoaded;
   }
-
-  const supportsDCZ = request.cf.clientAcceptEncoding.indexOf("dcz") !== -1 && zstd !== null;
-  const supportsDCB = request.cf.clientAcceptEncoding.indexOf("dcb") !== -1 && brotli !== null;
+  
+  let supportsDCZ = false;
+  let supportsDCB = false;
+  if ("cf" in request && "clientAcceptEncoding" in request.cf) {
+    supportsDCZ = request.cf.clientAcceptEncoding.indexOf("dcz") !== -1 && zstd !== null;
+    supportsDCB = request.cf.clientAcceptEncoding.indexOf("dcb") !== -1 && brotli !== null;
+  }
   if ((supportsDCZ || supportsDCB) && id in dictionaries && "hash" in dictionaries[id] && areUint8ArraysEqual(dictionaries[id]["hash"], hash)) {
     dictionary = dictionaries[id];
   } else {
