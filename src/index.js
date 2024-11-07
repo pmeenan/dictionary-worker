@@ -60,8 +60,8 @@ let static_dictionaries = {
     "/*/fancybox/jquery.fancybox.min.css?ver=*",
     "/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=*",
   ]
-}
-static_dictionaries = {}
+};
+static_dictionaries = {};
 
 // Psuedo-path where the dictionaries will be served from (shouldn't collide with a real directory)
 const dictionaryPath = "/dictionary/";
@@ -73,8 +73,11 @@ const compressionWindowLog = 20;  // Compression window should be at least as lo
 // Internal globals for managing state while waiting for the dictionary and zstd wasm to load
 let zstd = null;
 let brotli = null;
+let wasm = null;
 let wasmLoaded = null;
-let dictionaries = {};  // in-memory dictionaries, indexed by ID
+const dictionaries = {};  // in-memory dictionaries, indexed by ID
+const bufferSize = 10240; // 10k malloc buffers for response chunks (usually 4kb max)
+const buffers = [];       // Spare buffers
 
 export default {
   /*
@@ -213,22 +216,16 @@ async function compressStreamZstd(readable, writable, dictionary) {
 
   // allocate a compression context and buffers before the stream starts
   let cctx = null;
-  let zstdInBuff = null;
-  let zstdOutBuff = null;
-  let inSize = 0;
-  let outSize = 0;
+  let inBuff = null;
+  let outBuff = null;
   try {
     cctx = zstd.createCCtx();
-    if (cctx !== null) {
-      inSize = zstd.CStreamInSize();
-      outSize = zstd.CStreamOutSize();
-      zstdInBuff = zstd._malloc(inSize);
-      zstdOutBuff = zstd._malloc(outSize);
-
+    inBuff = getBuffer();
+    outBuff = getBuffer();
+  if (cctx !== null) {
       // configure the zstd parameters
       zstd.CCtx_setParameter(cctx, zstd.cParameter.c_compressionLevel, compressionLevel);
       zstd.CCtx_setParameter(cctx, zstd.cParameter.c_windowLog, compressionWindowLog );
-      
       zstd.CCtx_refCDict(cctx, dictionary.dictionary);
     }
   } catch (E) {
@@ -251,26 +248,26 @@ async function compressStreamZstd(readable, writable, dictionary) {
 
     // Grab chunks of the input stream in case it is bigger than the zstd buffer
     let pos = 0;
+    const inBuffer = new zstd.inBuffer();
+    const outBuffer = new zstd.outBuffer();
     while (pos < size || done) {
-      const endPos = Math.min(pos + inSize, size);
+      const endPos = Math.min(pos + bufferSize, size);
       const chunkSize = done ? 0 : endPos - pos;
       const chunk = done ? null : value.subarray(pos, endPos);
       pos = endPos;
 
       try {
         if (chunkSize > 0) {
-          zstd.HEAPU8.set(chunk, zstdInBuff);
+          wasm.HEAPU8.set(chunk, inBuff);
         }
 
-        const inBuffer = new zstd.inBuffer();
-        inBuffer.src = zstdInBuff;
+        inBuffer.src = inBuff;
         inBuffer.size = chunkSize;
         inBuffer.pos = 0;
         let finished = false;
         do {
-          const outBuffer = new zstd.outBuffer();
-          outBuffer.dst = zstdOutBuff;
-          outBuffer.size = outSize;
+          outBuffer.dst = outBuff;
+          outBuffer.size = bufferSize;
           outBuffer.pos = 0;
 
           // Use a naive flushing strategy for now. Flush the first chunk immediately and then let zstd decide
@@ -293,7 +290,7 @@ async function compressStreamZstd(readable, writable, dictionary) {
           console.log("Chunk: " + chunkSize +", out: " + outBuffer.pos);
 
           if (outBuffer.pos > 0) {
-            const data = new Uint8Array(zstd.HEAPU8.buffer, outBuffer.dst, outBuffer.pos);
+            const data = new Uint8Array(wasm.HEAPU8.buffer, outBuff, outBuffer.pos);
             await writer.write(data);
           }
 
@@ -310,8 +307,8 @@ async function compressStreamZstd(readable, writable, dictionary) {
   await writer.close();
 
   // Free the zstd context and buffers
-  if (zstdInBuff !== null) zstd._free(zstdInBuff);
-  if (zstdOutBuff !== null) zstd._free(zstdOutBuff);
+  releaseBuffer(inBuff);
+  releaseBuffer(outBuff);
   if (cctx !== null) zstd.freeCCtx(cctx);
 }
 
@@ -325,13 +322,11 @@ async function compressStreamBrotli(readable, writable, dictionary) {
   let state = null;
   let inBuff = null;
   let outBuff = null;
-  let inSize = 102400;
-  let outSize = 204800;
   try {
     state = brotli.CreateInstance();
     if (state !== null) {
-      inBuff = brotli._malloc(inSize);
-      outBuff = brotli._malloc(outSize);
+      inBuff = getBuffer();
+      outBuff = getBuffer();
 
       // configure the brotli parameters
       brotli.SetParameter(state, brotli.Parameter.QUALITY, compressionLevel);
@@ -354,7 +349,7 @@ async function compressStreamBrotli(readable, writable, dictionary) {
     // Grab chunks of the input stream in case it is bigger than the zstd buffer
     let pos = 0;
     while (pos < size || done) {
-      const endPos = Math.min(pos + inSize, size);
+      const endPos = Math.min(pos + bufferSize, size);
       const chunkSize = done ? 0 : endPos - pos;
       const chunk = done ? null : value.subarray(pos, endPos);
       pos = endPos;
@@ -371,12 +366,12 @@ async function compressStreamBrotli(readable, writable, dictionary) {
           inBuffer.size = chunkSize;
           const outBuffer = new brotli.Buffer();
           outBuffer.ptr = outBuff;
-          outBuffer.size = outSize;
+          outBuffer.size = bufferSize;
           finished = true;
 
           let mode = done ? brotli.Operation.FINISH : brotli.Operation.PROCESS;
           if (brotli.CompressStream(state, mode, inBuffer, outBuffer)) {
-            const available = outSize - outBuffer.size;
+            const available = bufferSize - outBuffer.size;
             if (available > 0) {
               const data = new Uint8Array(brotli.HEAPU8.buffer, outBuff, available);
               await writer.write(data);
@@ -398,8 +393,8 @@ async function compressStreamBrotli(readable, writable, dictionary) {
   await writer.close();
 
   // Free the brotli context and buffers
-  if (inBuff !== null) brotli._free(inBuff);
-  if (outBuff !== null) brotli._free(outBuff);
+  releaseBuffer(inBuff);
+  releaseBuffer(outBuff);
   if (state !== null) brotli.DestroyInstance(state);
 }
 
@@ -572,6 +567,7 @@ async function zstdInit(ctx) {
         return path
       },
     }).catch(E => console.log(E));
+    wasm = zstd;
     resolve(true);
   }
 }
@@ -594,6 +590,7 @@ async function brotliInit(ctx) {
         return path
       },
     }).catch(E => console.log(E));
+    wasm = brotli;
     resolve(true);
   }
 }
@@ -602,17 +599,14 @@ function prepareDictionary(bytes) {
   let prepared = null;
   try {
     if (bytes !== null) {
+      const d = wasm._malloc(bytes.byteLength)
+      wasm.HEAPU8.set(bytes, d);
       if (zstd !== null) {
-        const d = zstd._malloc(bytes.byteLength)
-        zstd.HEAPU8.set(bytes, d);
         prepared = zstd.createCDict(d, bytes.byteLength, compressionLevel);
-        zstd._free(d);
       } else if (brotli !== null) {
-        const d = brotli._malloc(bytes.byteLength)
-        brotli.HEAPU8.set(bytes, d);
         prepared = brotli.PrepareDictionary(brotli.SharedDictionaryType.Raw, bytes.byteLength, d, compressionLevel);
-        brotli._free(d);
       }
+      wasm._free(d);
     }
   } catch (E) {
     console.log(E);
@@ -643,4 +637,18 @@ function areUint8ArraysEqual(arr1, arr2) {
   }
 
   return true;
+}
+
+function getBuffer() {
+  let buffer = buffers.pop();
+  if (!buffer && wasm !== null) {
+    buffer = wasm._malloc(bufferSize);
+  }
+  return buffer
+}
+
+function releaseBuffer(buffer) {
+  if (buffer !== null) {
+    buffers.push(buffer);
+  }
 }
