@@ -61,7 +61,7 @@ let static_dictionaries = {
     "/wp-content/plugins/jquery-t-countdown-widget/css/hoth/style.css?ver=*",
   ]
 };
-static_dictionaries = {};
+//static_dictionaries = {};
 
 // Psuedo-path where the dictionaries will be served from (shouldn't collide with a real directory)
 const dictionaryPath = "/dictionary/";
@@ -232,8 +232,6 @@ async function compressStreamZstd(readable, writable, dictionary) {
   // write the dcz header
   const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...dictionary.hash]);
   await writer.write(dczHeader);
-  console.log("Wrote dcz header");
-  console.log(dczHeader);
   
   let isFirstChunk = true;
   let chunksGathered = 0;
