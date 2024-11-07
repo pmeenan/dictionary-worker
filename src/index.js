@@ -284,8 +284,6 @@ async function compressStreamZstd(readable, writable, dictionary) {
           // Keep track of the number of chunks processed where we didn't send any response.
           if (outBuffer.pos == 0) chunksGathered++;
 
-          console.log("Chunk: " + chunkSize +", out: " + outBuffer.pos);
-
           if (outBuffer.pos > 0) {
             const data = new Uint8Array(wasm.HEAPU8.buffer, outBuff, outBuffer.pos);
             await writer.write(data);
