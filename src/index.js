@@ -528,6 +528,7 @@ async function loadDictionary(request, env, ctx) {
     supportsDCB = request.cf.clientAcceptEncoding.indexOf("dcb") !== -1 && brotli !== null;
   }
   if ((supportsDCZ || supportsDCB) && id in dictionaries && "hash" in dictionaries[id] && areUint8ArraysEqual(dictionaries[id]["hash"], hash)) {
+    dictionaries[id]['lastUsed'] = performance.now();
     dictionary = dictionaries[id];
   } else {
     console.log("Dictionary mismatch");
@@ -656,7 +657,27 @@ function toHex(buffer) {
   return Array.prototype.map.call(buffer, x => ('00' + x.toString(16)).slice(-2)).join('');
 }
 
-// TODO: Free any dictionaries or buffers that haven't been used in a while
+// TODO: Free any buffers that haven't been used in a while
+let lastCleanup = null;
+const CLEANUP_INTERVAL = 600 * 1000; // Every 5 minutes
+const DICTIONARY_TTL = 3600 * 1000;  // Keep unused dictionaries for an hour
 async function cleanup() {
-
+  const now = performance.now();
+  if (!lastCleanup || now - lastCleanup >= CLEANUP_INTERVAL) {
+    try {
+      lastCleanup = now;
+      const keys = [];
+      for (const id in dictionaries) {
+        if ("lastUsed" in dictionaries[id] && now - dictionaries[id]["lastUsed"] > DICTIONARY_TTL) {
+          keys.push(id);
+        }
+      }
+      for (const key in keys) {
+        console.log("Deleting stale dictionary: " + key);
+        delete dictionaries[key];
+      }
+    } catch (E) {
+      console.log(E);
+    }
+  }
 }
