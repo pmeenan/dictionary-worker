@@ -126,7 +126,7 @@ export default {
             const dictionary = await dictionaryPromise;
 
             if (original.ok && dictionary !== null) {
-              const response = await compressResponse(original, dictionary, headers, ctx);
+              const response = compressResponse(original, dictionary, headers, ctx);
               //ctx.waitUntil(cache.put(cacheKey, response.clone()));
               return response;
             } else {
@@ -180,35 +180,32 @@ function addDictionaryHeader(request, headers) {
 /*
   Dictionary-compress the response
 */
-async function compressResponse(original, dictionary, headers, ctx) {
+function compressResponse(original, dictionary, headers, ctx) {
   const { readable, writable } = new TransformStream();
-  if (zstd !== null) {
-    ctx.waitUntil(compressStreamZstd(original.body, writable, dictionary));
-  } else if (brotli !== null) {
-    ctx.waitUntil(compressStreamBrotli(original.body, writable, dictionary));
-  }
 
-  // Add the appropriate headers
-  const response = new Response(readable, original);
-  if (zstd !== null) {
-    let ver = zstd.versionNumber();
-    response.headers.set("X-Zstd-Version", ver);
-    response.headers.set("Content-Encoding", 'dcz',);
-    response.encodeBody = "manual";
-  } else if (brotli !== null) {
-    let ver = brotli.Version();
-    response.headers.set("X-Brotli-Version", ver);
-    response.headers.set("Content-Encoding", 'dcb',);
-    response.encodeBody = "manual";
+  const init = {
+    "cf": original.cf,
+    "encodeBody": "manual",
+    "headers": original.headers,
+    "status": original.status,
+    "statusText": original.statusText
   }
+  const response = new Response(readable, init);
   for (const header of headers) {
     response.headers.append(header[0], header[1]);
+  }
+  if (zstd !== null) {
+    response.headers.set("Content-Encoding", 'dcz',);
+    ctx.waitUntil(compressStreamZstd(original, writable, dictionary));
+  } else if (brotli !== null) {
+    response.headers.set("Content-Encoding", 'dcb',);
+    ctx.waitUntil(compressStreamBrotli(original, writable, dictionary));
   }
   return response;
 }
 
-async function compressStreamZstd(readable, writable, dictionary) {
-  const reader = readable.getReader();
+async function compressStreamZstd(original, writable, dictionary) {
+  const reader = original.body.getReader();
   const writer = writable.getWriter();
 
   // allocate a compression context and buffers before the stream starts
@@ -229,12 +226,9 @@ async function compressStreamZstd(readable, writable, dictionary) {
     console.log(E);
   }
 
-  // write the dcz header
-  const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...dictionary.hash]);
-  await writer.write(dczHeader);
-  
   let isFirstChunk = true;
   let chunksGathered = 0;
+  let headerWritten = false;
 
   // streaming compression modeled after https://github.com/facebook/zstd/blob/dev/examples/streaming_compression.c
   while (true) {
@@ -283,8 +277,13 @@ async function compressStreamZstd(readable, writable, dictionary) {
           if (outBuffer.pos == 0) chunksGathered++;
 
           if (outBuffer.pos > 0) {
+            if (!headerWritten) {
+              const dczHeader = new Uint8Array([0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00, ...dictionary.hash]);
+              await writer.write(dczHeader);
+              headerWritten = true;
+            }
             const data = new Uint8Array(wasm.HEAPU8.buffer, outBuff, outBuffer.pos);
-            await writer.write(data);
+            await writer.write(data.slice(0));  // Write a copy of the buffer so it doesn't get overwritten
           }
 
           finished = done ? (remaining == 0) : (inBuffer.pos == inBuffer.size);
@@ -297,18 +296,19 @@ async function compressStreamZstd(readable, writable, dictionary) {
     if (done) break;
   }
 
-  await writer.close();
-
   // Free the zstd context and buffers
   releaseBuffer(inBuff);
   releaseBuffer(outBuff);
   if (cctx !== null) zstd.freeCCtx(cctx);
+
+  await writer.close();
+  await cleanup();
 }
 
 // The current brotli sample below doesn't handle streaming incremental chunks
 // (it will flush whenever the encoder decides to)
-async function compressStreamBrotli(readable, writable, dictionary) {
-  const reader = readable.getReader();
+async function compressStreamBrotli(original, writable, dictionary) {
+  const reader = original.body.getReader();
   const writer = writable.getWriter();
 
   // allocate a compression context and buffers before the stream starts
@@ -330,10 +330,6 @@ async function compressStreamBrotli(readable, writable, dictionary) {
   } catch (E) {
     console.log(E);
   }
-  
-  // write the dcb header
-  const dcbHeader = new Uint8Array([0xff, 0x44, 0x43, 0x42, ...dictionary.hash]);
-  await writer.write(dcbHeader);
   
   while (true) {
     const { value, done } = await reader.read();
@@ -366,8 +362,13 @@ async function compressStreamBrotli(readable, writable, dictionary) {
           if (brotli.CompressStream(state, mode, inBuffer, outBuffer)) {
             const available = bufferSize - outBuffer.size;
             if (available > 0) {
+              if (!headerWritten) {
+                const dcbHeader = new Uint8Array([0xff, 0x44, 0x43, 0x42, ...dictionary.hash]);
+                await writer.write(dcbHeader);
+                headerWritten = true;
+              }
               const data = new Uint8Array(brotli.HEAPU8.buffer, outBuff, available);
-              await writer.write(data);
+              await writer.write(data.slice(0));
             }
             if (done && brotli.HasMoreOutput(state)) {
               finished = false;
@@ -383,12 +384,14 @@ async function compressStreamBrotli(readable, writable, dictionary) {
     }
     if (done) break;
   }
-  await writer.close();
 
   // Free the brotli context and buffers
   releaseBuffer(inBuff);
   releaseBuffer(outBuff);
   if (state !== null) brotli.DestroyInstance(state);
+
+  await writer.close();
+  await cleanup();
 }
 
 /*
@@ -647,4 +650,13 @@ function releaseBuffer(buffer) {
   if (buffer !== null) {
     buffers.push(buffer);
   }
+}
+
+function toHex(buffer) {
+  return Array.prototype.map.call(buffer, x => ('00' + x.toString(16)).slice(-2)).join('');
+}
+
+// TODO: Free any dictionaries or buffers that haven't been used in a while
+async function cleanup() {
+
 }
