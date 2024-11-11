@@ -124,7 +124,7 @@ export default {
             // Wait for the dictionary to finish loading
             const dictionary = await dictionaryPromise;
 
-            if (original.ok && dictionary !== null) {
+            if (original.status == 200 && dictionary !== null) {
               const response = compressResponse(original, dictionary, headers, ctx);
               ctx.waitUntil(cache.put(cacheKey, response.clone()));
               return response;
