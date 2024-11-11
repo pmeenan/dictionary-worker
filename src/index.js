@@ -107,13 +107,12 @@ export default {
       if (dest && targetDestinations.includes(dest)) {
         headers.push(["Vary", "Available-Dictionary"]);
         if (request.headers.get("available-dictionary") && request.headers.get("dictionary-id")) {
+          // Use the dictionary and URL combined as the cache key for the entry
           const cacheKey = url + " " + request.headers.get("available-dictionary");
-          //const cache = caches.default;
-          //const cached = await cache.match(cacheKey);
-          const cached = false;
+          const cache = caches.default;
+          const cached = await cache.match(cacheKey);
           if (cached) {
             const response = new Response(cached.body, cached);
-            response.headers.append("x-Dictionary", "cached");
             return response;
           } else {
             // Trigger the async dictionary load
@@ -127,7 +126,7 @@ export default {
 
             if (original.ok && dictionary !== null) {
               const response = compressResponse(original, dictionary, headers, ctx);
-              //ctx.waitUntil(cache.put(cacheKey, response.clone()));
+              ctx.waitUntil(cache.put(cacheKey, response.clone()));
               return response;
             } else {
               return addHeaders(original, headers);
