@@ -4,10 +4,9 @@
 import zstdlib from "../zstd-wasm-compress/bin/zstdlib.js";
 import zstdwasm from "../zstd-wasm-compress/bin/zstdlib.wasm";
 
-/* Brotli - ~900k compressed
-import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
-import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
-*/
+// Brotli - ~300k compressed
+//import brotlienc from "../brotli-wasm-compress/bin/brotlienc.js";
+//import BrotliEncoder from "../brotli-wasm-compress/bin/brotlienc.wasm";
 
 const expire_days = 7; // Default dictionary expiration (can be overriden per-dictionary with "expire-days")
 
@@ -329,6 +328,8 @@ async function compressStreamBrotli(original, writable, dictionary) {
   } catch (E) {
     console.log(E);
   }
+
+  let headerWritten = false;
   
   while (true) {
     const { value, done } = await reader.read();
@@ -672,7 +673,6 @@ async function cleanup() {
         }
       }
       for (const key in keys) {
-        console.log("Deleting stale dictionary: " + key);
         delete dictionaries[key];
       }
     } catch (E) {
