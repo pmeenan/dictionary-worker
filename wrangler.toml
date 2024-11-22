@@ -8,5 +8,4 @@ workers_dev = false
 route = {pattern = "roadtrip.meenan.us/*", zone_id = "c7d12302659eff5de51fbc184af8b4fc"}
 
 [observability]
-enabled = true
-head_sampling_rate = 1
+enabled = false
