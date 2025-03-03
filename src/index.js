@@ -445,7 +445,7 @@ async function fetchDictionary(env, request) {
 function findMatch(url, dest) {
   if (dest in static_dictionaries) {
     for (const pattern of static_dictionaries[dest]) {
-      const urlPattern = new URLPattern(pattern, url);
+      const urlPattern = new URLPattern(pattern, url.toString());
       if (urlPattern.test(url)) {
         return pattern;
       }
