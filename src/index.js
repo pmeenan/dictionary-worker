@@ -124,7 +124,8 @@ export default {
             const dictionary = await dictionaryPromise;
 
             if (original.status == 200 && dictionary !== null) {
-              const response = compressResponse(original, dictionary, headers, ctx);
+              const flushChunks = dest == "document";
+              const response = compressResponse(original, dictionary, headers, ctx, flushChunks);
               ctx.waitUntil(cache.put(cacheKey, response.clone()));
               return response;
             } else {
@@ -178,7 +179,7 @@ function addDictionaryHeader(request, headers) {
 /*
   Dictionary-compress the response
 */
-function compressResponse(original, dictionary, headers, ctx) {
+function compressResponse(original, dictionary, headers, ctx, flushChunks) {
   const { readable, writable } = new TransformStream();
 
   const init = {
@@ -194,15 +195,15 @@ function compressResponse(original, dictionary, headers, ctx) {
   }
   if (zstd !== null) {
     response.headers.set("Content-Encoding", 'dcz',);
-    ctx.waitUntil(compressStreamZstd(original, writable, dictionary));
+    ctx.waitUntil(compressStreamZstd(original, writable, dictionary, flushChunks));
   } else if (brotli !== null) {
     response.headers.set("Content-Encoding", 'dcb',);
-    ctx.waitUntil(compressStreamBrotli(original, writable, dictionary));
+    ctx.waitUntil(compressStreamBrotli(original, writable, dictionary, flushChunks));
   }
   return response;
 }
 
-async function compressStreamZstd(original, writable, dictionary) {
+async function compressStreamZstd(original, writable, dictionary, flushChunks) {
   const reader = original.body.getReader();
   const writer = writable.getWriter();
 
@@ -224,8 +225,6 @@ async function compressStreamZstd(original, writable, dictionary) {
     console.log(E);
   }
 
-  let isFirstChunk = true;
-  let chunksGathered = 0;
   let headerWritten = false;
 
   // streaming compression modeled after https://github.com/facebook/zstd/blob/dev/examples/streaming_compression.c
@@ -260,19 +259,12 @@ async function compressStreamZstd(original, writable, dictionary) {
           // Use a naive flushing strategy for now. Flush the first chunk immediately and then let zstd decide
           // when each chunk should be emitted (likey accumulate until complete).
           // Also, every 5 chunks that were gathered, flush irregardless.
-          let mode = zstd.EndDirective.e_continue;
+          let mode = flushChunks ? zstd.EndDirective.e_flush : zstd.EndDirective.e_continue;
           if (done) {
             mode = zstd.EndDirective.e_end;
-          } else if (isFirstChunk || chunksGathered >= 4) {
-            mode = zstd.EndDirective.e_flush;
-            isFirstChunk = false;
-            chunksGathered = 0;
           }
 
           const remaining = zstd.compressStream2(cctx, outBuffer, inBuffer, mode);
-
-          // Keep track of the number of chunks processed where we didn't send any response.
-          if (outBuffer.pos == 0) chunksGathered++;
 
           if (outBuffer.pos > 0) {
             if (!headerWritten) {
@@ -305,7 +297,7 @@ async function compressStreamZstd(original, writable, dictionary) {
 
 // The current brotli sample below doesn't handle streaming incremental chunks
 // (it will flush whenever the encoder decides to)
-async function compressStreamBrotli(original, writable, dictionary) {
+async function compressStreamBrotli(original, writable, dictionary, flushChunks) {
   const reader = original.body.getReader();
   const writer = writable.getWriter();
 
@@ -358,7 +350,11 @@ async function compressStreamBrotli(original, writable, dictionary) {
           outBuffer.size = bufferSize;
           finished = true;
 
-          let mode = done ? brotli.Operation.FINISH : brotli.Operation.PROCESS;
+          let mode = flushChunks ? brotli.Operation.FLUSH : brotli.Operation.PROCESS;
+          if (done) {
+            mode = brotli.Operation.FINISH;
+          }
+
           if (brotli.CompressStream(state, mode, inBuffer, outBuffer)) {
             const available = bufferSize - outBuffer.size;
             if (available > 0) {
