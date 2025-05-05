@@ -14,8 +14,8 @@ const expire_days = 7; // Default dictionary expiration (can be overriden per-di
 // These can either be "asset" file paths under the "assets" directory or
 // "url" pointing to a path to fetch the dictionary.
 const dynamic_dictionaries = {
-  "roadtrip": {
-    "asset": "/roadtrip.dat",
+  "roadtrip2": {
+    "asset": "/HWl0A6pNEHO4AeCdArQj53JlvZKN8Fcwk3JcGv3tak8.dat",
     "match": "/*",
     "match-dest": ["document", "frame"],
     "expire-days": 30
@@ -419,9 +419,11 @@ async function fetchDictionary(env, request) {
         m += ')';
         match += ', match-dest=' + m;
       }
-      return new Response(response.body, {
+      const bytes = await response.bytes();
+      return new Response(bytes, {
         headers: {
-          "content-type": "text/plain; charset=UTF-8",  /* Can be anything but text/plain will allow for Cloudflare to apply compression */
+          //"content-type": "text/plain; charset=UTF-8",  /* Can be anything but text/plain will allow for Cloudflare to apply compression */
+          "content-type": "application/octet-stream",  /* Use uncompressed responses for now - something weird is going on otherwise */
           "cache-control": "public, max-age=" + expires,
           "use-as-dictionary": match
         }
@@ -530,7 +532,7 @@ async function loadDictionary(request, env, ctx) {
     console.log("Dictionary mismatch");
     if (!supportsDCZ) console.log("Does not support dcz");
     if (!(id in dictionaries)) {
-      console,log("Dictionary " + id + " not found")
+      console.log("Dictionary " + id + " not found")
     } else if (!areUint8ArraysEqual(dictionaries[id]["hash"], hash)) {
       console.log("Hash mismatch");
       console.log(dictionaries[id].hash);
